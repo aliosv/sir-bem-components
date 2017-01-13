@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+  - "4.2.4"
+env:
+  - YENV=production
+install:
+  - npm install
+  - npm run build-examples
+after_success: |
+  if [ -n "$GITHUB_API_KEY" ]; then
+    cd "$TRAVIS_BUILD_DIR"
+
+    git clone --single-branch -b gh-pages https://github.com/aliosv/sir-bem-components.git
+    rm -rf sir-bem-components/desktop.examples
+    cp -r desktop.examples sir-bem-components
+    cp -r index.html sir-bem-components
+
+    cd sir-bem-components
+    git add --all
+    git -c user.name='travis' -c user.email='travis' commit -m $TRAVIS_COMMIT
+    # Make sure to make the output quiet, or else the API token will leak!
+    # This works because the API key can replace your password.
+    git push -f -q https://aliosv:$GITHUB_API_KEY@github.com/aliosv/sir-bem-components gh-pages
+    cd "$TRAVIS_BUILD_DIR"
+  fi

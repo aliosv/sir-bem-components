@@ -7,5 +7,7 @@
 !examples.blocks/**/*
 !.borschik
 !.gitignore
+!.travis.yml
 !build-examples-index.js
 !package.json
+!README.md
