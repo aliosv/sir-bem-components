@@ -1,0 +1,11 @@
+*/**/*
+!.gitignore
+!.nojekyll
+!*/desktop.examples
+!*/desktop.examples/*
+!*/desktop.examples/*/*/
+!*/desktop.examples/**/*.html
+!*/desktop.examples/**/_*.js
+*/desktop.examples/**/_*.*.js
+!*/desktop.examples/**/_*.css
+!*/index.html
