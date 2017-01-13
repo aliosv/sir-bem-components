@@ -1,0 +1,11 @@
+**/*
+!.enb/make.js
+!.enb/targets.js
+!.githooks/**/*
+!common.blocks/**/*
+!design/**/*
+!examples.blocks/**/*
+!.borschik
+!.gitignore
+!build-examples-index.js
+!package.json
