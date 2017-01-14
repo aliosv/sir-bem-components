@@ -1,0 +1,7 @@
+.icon_button_profile-orange {
+    background-image: url(icon_button_profile-orange.svg);
+}
+
+.button .icon_button_profile-orange {
+    background-size: 60% auto;
+}

@@ -1,0 +1,143 @@
+.calendar_month
+{
+    position: relative;
+    width: 224px;
+    display: inline-block;
+}
+
+.calendar_month .calendar__day-names
+{
+    white-space: nowrap;
+}
+
+.calendar_month .calendar__day-names .calendar__day-name
+{
+    font-size: 11px;
+
+    text-transform: uppercase;
+}
+
+.calendar_month .calendar__day-name_weekend,
+.calendar_month .calendar__day_weekend
+{
+    color: #f92400;
+}
+
+.calendar_month .calendar__day,
+.calendar_month .calendar__day-name
+{
+    font-size: 14px;
+    line-height: 32px;
+
+    display: inline-block;
+
+    width: 32px;
+
+    text-align: center;
+}
+
+.calendar_month .calendar__day,
+.calendar_month .calendar__day-name
+{
+    cursor: default;
+}
+
+.calendar_month > .calendar__day:not(.calendar__day_in-past):hover
+{
+    line-height: 30px;
+
+    width: 30px;
+
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.calendar_month .calendar__day_selected
+{
+    background: #fff1a8;
+}
+
+.calendar_month .calendar__day_in-past
+{
+    cursor: default;
+
+    opacity: 0.5;
+}
+
+.calendar_month .calendar__month-name
+{
+    font-size: 14px;
+    line-height: 32px;
+
+    margin: 0 0 -32px;
+
+    text-transform: uppercase;
+
+    color: #999;
+}
+
+.calendar_month .calendar__month-name:after
+{
+    display: inline-block;
+
+    width: 100%;
+    height: 32px;
+
+    content: '';
+    vertical-align: top;
+}
+
+.calendar_month .calendar__month-name_startDay_2:after
+{
+    width: 192px;
+}
+.calendar_month .calendar__month-name_startDay_2 + .calendar__day
+{
+    margin-left: 32px;
+}
+
+.calendar_month .calendar__month-name_startDay_3:after
+{
+    width: 160px;
+}
+.calendar_month .calendar__month-name_startDay_3 + .calendar__day
+{
+    margin-left: 64px;
+}
+
+.calendar_month .calendar__month-name_startDay_4:after
+{
+    width: 128px;
+}
+.calendar_month .calendar__month-name_startDay_4 + .calendar__day
+{
+    margin-left: 96px;
+}
+
+.calendar_month .calendar__month-name_startDay_5:after
+{
+    width: 96px;
+}
+.calendar_month .calendar__month-name_startDay_5 + .calendar__day
+{
+    margin-left: 128px;
+}
+
+.calendar_month .calendar__month-name_startDay_6:after
+{
+    width: 64px;
+}
+.calendar_month .calendar__month-name_startDay_6 + .calendar__day
+{
+    margin-left: 160px;
+}
+
+.calendar_month .calendar__month-name_startDay_7:after
+{
+    width: 32px;
+}
+.calendar_month .calendar__month-name_startDay_7 + .calendar__day
+{
+    margin-left: 192px;
+}

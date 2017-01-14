@@ -1,0 +1,7 @@
+.icon_button_next-white {
+    background-image: url(icon_button_next-white.svg);
+}
+
+.button .icon_button_next-white {
+    background-size: 40% auto;
+}

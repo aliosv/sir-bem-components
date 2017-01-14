@@ -1,0 +1,7 @@
+.icon_button_close-white {
+    background-image: url(icon_button_close-white.svg);
+}
+
+.button .icon_button_close-white {
+    background-size: 60% auto;
+}

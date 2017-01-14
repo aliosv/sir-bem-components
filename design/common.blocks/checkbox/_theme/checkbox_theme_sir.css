@@ -1,0 +1,192 @@
+.checkbox_theme_sir {
+    font-family: 'Ubuntu', Arial, sans-serif;
+
+    position: relative; /* fix #1538 */
+
+    color: #414141;
+
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+.checkbox_theme_sir:hover {
+    cursor: pointer;
+    }
+
+.checkbox_theme_sir .checkbox__control {
+    position: absolute;
+    z-index: -1;
+
+    margin: 0;
+
+    opacity: 0;
+    }
+
+.checkbox_theme_sir .checkbox__box {
+    position: relative;
+
+    display: inline-block;
+
+    vertical-align: top;
+
+    background: #cbcbcb;
+    }
+
+.checkbox_theme_sir .checkbox__box:before {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+
+    content: '';
+
+    background: #fff;
+    }
+
+.checkbox_theme_sir .checkbox__box:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    visibility: hidden;
+
+    content: '';
+    -webkit-transition: opacity 0.05s ease-out, visibility 0s linear 0.05s, -webkit-transform 0.05s ease-out;
+            transition: opacity 0.05s ease-out, visibility 0s linear 0.05s, -webkit-transform 0.05s ease-out;
+            transition: transform 0.05s ease-out, opacity 0.05s ease-out, visibility 0s linear 0.05s;
+            transition: transform 0.05s ease-out, opacity 0.05s ease-out, visibility 0s linear 0.05s, -webkit-transform 0.05s ease-out;
+
+    opacity: 0;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAKCAMAAACzB5/1AAAAS1BMVEUAAADwj03uhTzvjEj738v87uPwkVDxlFTynmTzomrzo2397+X98Of98uvugjnwkVHxl1rxml70q3r63cj86dz869787OD98enugDWS8VEYAAAAGHRSTlMA3/TnMxPb1b+4shAOCPrZzsiiNxsZFgs36m5YAAAAT0lEQVQI10XNRw6AMAxEUUNIIYVe5v4nxQMS/is/ydKI5WNqptIBq+xTP1BVhUUcQN9B1VXZQLdIFf3K9Ex5YSPenMrsrn8jqU6xcji+4wFigQS2eg5ekwAAAABJRU5ErkJggg==);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    }
+
+.checkbox_theme_sir.checkbox_partial .checkbox__box:after {
+    margin: auto;
+
+    background-color: #ee8035;
+    background-image: none;
+    }
+
+.checkbox_theme_sir.checkbox_partial.checkbox_disabled .checkbox__box:after {
+    background-color: #cbcbcb;
+    }
+
+.checkbox_theme_sir.checkbox_size_m {
+    font-size: 13px;
+    line-height: 16px;
+    }
+
+.checkbox_theme_sir.checkbox_size_m .checkbox__box {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    }
+
+.checkbox_theme_sir.checkbox_size_m .checkbox__box:after {
+    -webkit-transform: translateY(-5px);
+            transform: translateY(-5px);
+
+    background-size: 11px auto;
+    }
+
+.checkbox_theme_sir.checkbox_size_m.checkbox_partial .checkbox__box:after {
+    width: 10px;
+    height: 4px;
+    }
+
+.checkbox_theme_sir.checkbox_size_l {
+    font-size: 16px;
+    line-height: 20px;
+    }
+
+.checkbox_theme_sir.checkbox_size_l .checkbox__box {
+    width: 20px;
+    height: 20px;
+    margin-right: 7px;
+    }
+
+.checkbox_theme_sir.checkbox_size_l .checkbox__box:after {
+    -webkit-transform: translateY(-7px);
+            transform: translateY(-7px);
+
+    background-size: 14px auto;
+    }
+
+.checkbox_theme_sir.checkbox_size_l.checkbox_partial .checkbox__box:after {
+    width: 12px;
+    height: 4px;
+    }
+
+.checkbox_theme_sir.checkbox_checked .checkbox__box:after {
+    visibility: visible;
+
+    -webkit-transition-delay: 0s;
+            transition-delay: 0s;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+
+    opacity: 1;
+    }
+
+.checkbox_theme_sir.checkbox_focused .checkbox__box:before {
+    box-shadow: 0 0 0 1px #cbcbcb, inset 0 0 0 1px #cbcbcb;
+    }
+
+.checkbox_theme_sir.checkbox_hovered .checkbox__box {
+    background: #999;
+    }
+
+.checkbox_theme_sir.checkbox_hovered.checkbox_checked .checkbox__box {
+    background: #5a5a5a;
+    }
+
+.checkbox_theme_sir.checkbox_disabled {
+    cursor: default;
+
+    color: #e5e5e5;
+    }
+
+.checkbox_theme_sir.checkbox_disabled .checkbox__box {
+    background: #e5e5e5;
+    }
+
+.checkbox_theme_sir.checkbox_disabled .checkbox__box:before {
+    background: #f2f2f2;
+    }
+
+.checkbox_theme_sir.checkbox_disabled.checkbox_checked .checkbox__box {
+    background: #cbcbcb;
+    }
+
+.checkbox_theme_sir.checkbox_disabled.checkbox_checked .checkbox__box:after {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAKCAMAAACzB5/1AAAAM1BMVEUAAADQ0NDs7Ozt7e3w8PDPz8/U1NTy8vLOzs7W1tbr6+vS0tLo6Ojn5+fu7u7Y2NjLy8setHEfAAAAEHRSTlMA6U5DN+nTLPTITt5kZEO8Z/BEHQAAAElJREFUCNdFylEOgCAMBNEFpK0guPc/rWlp4vy9ZPBXp2zoqBpqnRQscqmrkJwwko8elYaX7u3qDbhud6gC6VRYXHaUtpGIv6Q+JG4DsCckYQUAAAAASUVORK5CYII=);
+    }
+
+.checkbox_theme_sir.checkbox_type_button {
+    display: inline-block;
+    }
+
+.checkbox_theme_sir.checkbox_type_line.checkbox_size_m {
+    margin-right: 13px;
+    }
+
+.checkbox_theme_sir.checkbox_type_line.checkbox_size_l {
+    margin-right: 15px;
+    }
+
+.checkbox_theme_sir.checkbox_type_line:last-child
+        {
+    margin-right: 0;
+    }
+
+/* hack for Safari only */
+
+_::-webkit-full-page-media,
+_:future,
+:root .checkbox_theme_sir .checkbox__box {
+    pointer-events: none; /* NOTE: Fix #1472 and #1590 */
+    }

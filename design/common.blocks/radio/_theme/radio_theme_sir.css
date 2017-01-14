@@ -1,0 +1,118 @@
+.radio_theme_sir {
+    font-family: 'Ubuntu', Arial, sans-serif;
+
+    color: #414141;
+
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+.radio_theme_sir:hover {
+    cursor: pointer;
+    }
+.radio_theme_sir .radio__control {
+    position: absolute;
+    z-index: -1;
+
+    margin: 0;
+
+    opacity: 0;
+    }
+.radio_theme_sir .radio__box {
+    position: relative;
+
+    display: inline-block;
+
+    vertical-align: top;
+
+    border-radius: 50%;
+    background: #cbcbcb;
+    }
+.radio_theme_sir .radio__box:before {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+
+    content: '';
+
+    border-radius: 50%;
+    background: #fff;
+    }
+.radio_theme_sir.radio_size_m {
+    font-size: 13px;
+    line-height: 16px;
+    }
+.radio_theme_sir.radio_size_m .radio__box {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    }
+.radio_theme_sir.radio_size_m .radio__box:after {
+    top: 4px;
+    left: 4px;
+
+    width: 8px;
+    height: 8px;
+    }
+.radio_theme_sir.radio_size_l {
+    font-size: 16px;
+    line-height: 20px;
+    }
+.radio_theme_sir.radio_size_l .radio__box {
+    width: 20px;
+    height: 20px;
+    margin-right: 7px;
+    }
+.radio_theme_sir.radio_size_l .radio__box:after {
+    top: 5px;
+    left: 5px;
+
+    width: 10px;
+    height: 10px;
+    }
+.radio_theme_sir.radio_checked .radio__box:after {
+    position: absolute;
+
+    content: '';
+
+    border-radius: 50%;
+    background: #ee8035;
+    }
+.radio_theme_sir.radio_focused .radio__box:before {
+    box-shadow: 0 0 0 1px #cbcbcb, inset 0 0 0 1px #cbcbcb;
+    }
+.radio_theme_sir.radio_hovered .radio__box {
+    background: #999;
+    }
+.radio_theme_sir.radio_hovered.radio_checked .radio__box {
+    background: #5a5a5a;
+    }
+.radio_theme_sir.radio_disabled {
+    cursor: default;
+
+    color: #e5e5e5;
+    }
+.radio_theme_sir.radio_disabled .radio__box {
+    background: #e5e5e5;
+    }
+.radio_checked.radio_theme_sir.radio_disabled .radio__box {
+    background: #cbcbcb;
+    }
+.radio_theme_sir.radio_disabled .radio__box:before {
+    background: #f2f2f2;
+    }
+.radio_theme_sir.radio_disabled .radio__box:after {
+    background: #cbcbcb;
+    }
+.radio_theme_sir.radio_type_button {
+    display: inline-block;
+    }
+.radio_theme_sir.radio_type_line.radio_size_m {
+    margin-right: 13px;
+    }
+.radio_theme_sir.radio_type_line.radio_size_l {
+    margin-right: 16px;
+    }
+.radio_theme_sir.radio_type_line:last-child {
+    margin-right: 0;
+    }

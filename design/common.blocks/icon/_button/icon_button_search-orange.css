@@ -1,0 +1,7 @@
+.icon_button_search-orange {
+    background-image: url(icon_button_search-orange.svg);
+}
+
+.button .icon_button_search-orange {
+    background-size: 60% auto;
+}

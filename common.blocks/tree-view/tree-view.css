@@ -1,0 +1,27 @@
+.tree-view__node_group {
+    position: relative;
+    }
+
+.tree-view__node_group > .tree-view__node {
+    position: relative;
+    }
+
+.tree-view__node_group > .tree-view__node:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    content: '';
+    }
+
+.tree-view__node_group > .tree-view__node:last-child:before {
+    bottom: auto;
+    }
+
+.tree-view__node_group > .tree-view__node:after {
+    position: absolute;
+    left: 0;
+
+    content: '';
+    }

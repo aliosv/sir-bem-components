@@ -1,0 +1,159 @@
+.input_theme_sir {
+    font-family: 'Ubuntu', Arial, sans-serif;
+
+    position: relative;
+
+    display: inline-block;
+
+    background: #cbcbcb;
+
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+/* Decorative element (inner background) */
+
+.input_theme_sir:before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 1px;
+    left: 0;
+
+    content: '';
+
+    background: #fff;
+    }
+
+.input_theme_sir .input__box {
+    position: relative;
+
+    display: block;
+
+    user-select: none;
+    }
+
+.input_theme_sir .input__control {
+    font: inherit;
+    line-height: inherit;
+
+    position: relative;
+
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0;
+
+    border: 0;
+    outline: none;
+    background: none;
+
+    -webkit-appearance: none;
+    }
+/*лишние отступы у текста*/
+
+.input_theme_sir .input__control::-webkit-search-decoration {
+    -webkit-appearance: none;
+    }
+/*нативный крестик*/
+
+.input_theme_sir .input__control::-webkit-search-cancel-button {
+    display: none;
+    }
+
+.input_theme_sir .input__control::-webkit-input-placeholder {
+    text-indent: 0;
+
+    color: #999;
+    }
+.input_theme_sir.input_disabled .input__control::-webkit-input-placeholder {
+    color: #e5e5e5;
+    }
+
+.input_theme_sir .input__control::-moz-placeholder {
+    opacity: 1;
+    color: #999;
+    }
+.input_theme_sir.input_disabled .input__control::-moz-placeholder {
+    color: #e5e5e5;
+    }
+
+.input_theme_sir .input__control::-ms-clear {
+    display: none;
+    }
+
+.input_theme_sir .input__control::-webkit-autofill {
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    }
+
+.input_theme_sir.input_focused {
+    z-index: 1;
+    }
+
+.input_theme_sir.input_focused {
+    border-radius: 3px;
+    background: #fd9f5d;
+    }
+
+.input_theme_sir.input_focused:before {
+    top: 1px;
+    right: 1px;
+    left: 1px;
+
+    border-radius: 2px;
+    }
+
+.input_theme_sir.input_focused .input__control {
+    text-overflow: clip;
+    /* fix ellipsis bug in Chrome */
+    }
+
+.input_theme_sir.input_disabled {
+    color: #e5e5e5;
+    background: #e5e5e5;
+    }
+
+.input_theme_sir.input_disabled .input__box,
+.input_theme_sir.input_disabled .input__control {
+    cursor: default;
+
+    color: #e5e5e5;
+    }
+
+.input_theme_sir.input_size_m {
+    font-size: 13px;
+    line-height: 24px;
+    }
+
+.input_theme_sir.input_size_m .input__control {
+    height: 24px;
+    padding: 0 8px;
+    }
+
+.input_theme_sir.input_size_l {
+    font-size: 16px;
+    line-height: 32px;
+    }
+
+.input_theme_sir.input_size_l .input__control {
+    height: 32px;
+    padding: 0 10px;
+    }
+
+.input_theme_sir.input_size_xl {
+    font-size: 24px;
+    line-height: 40px;
+    }
+
+.input_theme_sir.input_size_xl .input__control {
+    height: 40px;
+    padding: 0 12px;
+    }
+
+.input_theme_sir.input_width_available {
+    width: 100%;
+    }
+
+.input_theme_sir.input_type_password .input__control {
+    text-overflow: clip;
+    }

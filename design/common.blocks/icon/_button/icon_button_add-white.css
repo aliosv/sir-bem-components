@@ -1,0 +1,7 @@
+.icon_button_add-white {
+    background-image: url(icon_button_add-white.svg);
+}
+
+.button .icon_button_add-white {
+    background-size: 40% auto;
+}

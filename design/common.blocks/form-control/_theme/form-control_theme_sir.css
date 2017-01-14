@@ -1,0 +1,118 @@
+.form-control_theme_sir.form-control_input {
+    display: inline-block;
+}
+
+.form-control_theme_sir.form-control_input.form-control_width_available {
+    width: 100%;
+}
+
+.form-control_theme_sir.form-control_input .form-control__label {
+    font-size: 11px;
+    line-height: 1.45;
+    color: #999999;
+    padding: 0 4px;
+}
+
+.form-control_theme_sir.form-control_input.form-control_empty .form-control__label {
+    visibility: hidden;
+}
+
+.form-control_theme_sir.form-control_input.form-control_disabled .form-control__label {
+    color: #e5e5e5;
+}
+
+.form-control_theme_sir.form-control_input.form-control_focused .form-control__label {
+    color: #ee8035;
+}
+
+.form-control_theme_sir.form-control_input.form-control_error .form-control__label {
+    color: #ca1329;
+}
+
+.form-control_theme_sir.form-control_input.form-control_hint .form-control__control {
+    display: flex;
+    align-items: flex-end;
+}
+
+.form-control_theme_sir.form-control_input .tooltip {
+    background-size: 60% auto;
+    flex-shrink: 0;
+}
+
+.form-control_theme_sir.form-control_input.form-control_error .input {
+    background: #ca1329;
+}
+
+.form-control_theme_sir.form-control_input .form-control__error {
+    margin-top: 1px;
+    display: none;
+    color: #ca1329;
+}
+
+.form-control_theme_sir.form-control_input.form-control_error .form-control__error {
+    display: block;
+    text-align: right;
+}
+
+
+.form-control_theme_sir.form-control_upload.form-control_error .form-control__control-wrap {
+    border: 1px solid #ca1329;
+    box-sizing: border-box;
+}
+.form-control_theme_sir.form-control_upload .form-control__error {
+    font-size: 11px;
+    line-height: 1.45;
+    color: #ca1329;
+}
+.form-control_theme_sir.form-control_upload .form-control__preview[src] {
+    background: #fff;
+}
+
+.form-control_theme_sir.form-control_upload_avatar {
+    padding: 0 0 0 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 80px;
+    position: relative;
+}
+.form-control_theme_sir.form-control_upload_avatar .form-control__control-wrap {
+    border-radius: 3px;
+    width: 80px;
+    height: 80px;
+    background: #fd9f5d url(form-control_upload_avatar.svg) 50% 50% no-repeat;
+    background-size: 30px auto;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.form-control_theme_sir.form-control_upload_avatar .form-control__label {
+    font-size: 13px;
+    line-height: 1.23;
+    color: #414141;
+    white-space: pre;
+}
+
+.form-control_theme_sir.form-control_upload_project-cover {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+.form-control_theme_sir.form-control_upload_project-cover .form-control__label {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    position: absolute;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.25;
+    text-align: center;
+    color: #ffffff;
+    z-index: 2;
+}
+.form-control_theme_sir.form-control_upload_project-cover .form-control__control-wrap {
+    width: 400px;
+    height: 250px;
+    background: #5a5a5a url(form-control_upload_project-cover.svg) 100% 100% no-repeat;
+    background-size: 95% auto;
+}

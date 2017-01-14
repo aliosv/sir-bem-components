@@ -15,6 +15,7 @@ module.exports = function(config) {
             exampleName = PATH.basename(nodeDirname);
 
         targets.configureLevels(nodeConfig, getLevels().concat([
+            PATH.join('examples.blocks'),
             PATH.join(nodeDirname, blockName + '.blocks'),
             PATH.join(nodeDirname, exampleName + '.blocks')
         ].filter(require('fs').existsSync)));

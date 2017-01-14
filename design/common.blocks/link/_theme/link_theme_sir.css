@@ -1,0 +1,21 @@
+.link_theme_sir {
+    color: #5a78a6;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.link_theme_sir.link_disabled {
+    color: #e5e5e5;
+}
+
+.link_theme_sir.link_focused {
+    color: #ee8035;
+}
+
+.link_theme_sir.link_hovered {
+    color: #ee8035;
+}
+
+.link_theme_sir.link_pressed {
+    color: #ee8035;
+}

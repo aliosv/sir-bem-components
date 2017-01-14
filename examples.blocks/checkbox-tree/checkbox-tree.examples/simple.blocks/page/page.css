@@ -1,0 +1,11 @@
+.page {
+    display: flex;
+    }
+
+.page > * {
+    flex-grow: 1;
+    }
+
+.page .data {
+    white-space: pre;
+    }

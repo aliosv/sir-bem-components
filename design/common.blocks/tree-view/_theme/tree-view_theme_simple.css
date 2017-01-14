@@ -1,0 +1,31 @@
+.tree-view_theme_simple .tree-view__node {
+    padding-top: 5px;
+    }
+
+.tree-view_theme_simple > .tree-view__node:first-child {
+    padding-top: 0;
+    }
+
+.tree-view_theme_simple .tree-view__node_group > .tree-view__node {
+    margin-left: 4px;
+    padding-left: 10px;
+    }
+
+.tree-view_theme_simple .tree-view__node_group > .tree-view__node:before {
+    width: 1px;
+
+    background: #000;
+    }
+
+.tree-view_theme_simple .tree-view__node_group > .tree-view__node:last-child:before {
+    height: 13px;
+    }
+
+.tree-view_theme_simple .tree-view__node_group > .tree-view__node:after {
+    top: 13px;
+
+    width: 10px;
+    height: 1px;
+
+    background: #000;
+    }

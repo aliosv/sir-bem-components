@@ -1,0 +1,196 @@
+.button_theme_sir {
+    font-family: 'Ubuntu', Arial, sans-serif;
+
+    position: relative;
+
+    display: inline-block;
+
+    margin: 0;
+    padding: 0;
+
+    user-select: none;
+    text-align: center;
+    white-space: nowrap;
+
+    color: #ee8035;
+    border: 0;
+    border-radius: 3px;
+    outline: 0;
+    background: #cbcbcb;
+
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+.button_theme_sir::-moz-focus-inner {
+    padding: 0;
+
+    border: 0;
+    }
+
+.button_theme_sir .button__text {
+    font-weight: 500;
+
+    position: relative;
+
+    display: inline-block;
+    overflow: hidden;
+
+    vertical-align: top;
+    letter-spacing: 0.5px;
+    text-overflow: ellipsis;
+    }
+
+.button_theme_sir .icon {
+    position: relative;
+    }
+
+.button_theme_sir.button_type_link {
+    text-decoration: none;
+    }
+/* Decorative element (inner background) */
+
+.button_theme_sir:before {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+
+    content: '';
+
+    border-radius: 2px;
+    background: #fff;
+    }
+
+.button_theme_sir.button_hovered {
+    cursor: pointer;
+
+    background: #fd9f5d;
+    }
+
+.button_theme_sir.button_focused-hard.button:before {
+    box-shadow: 0 0 0 1px #cbcbcb, inset 0 0 0 1px #cbcbcb;
+    }
+
+.button_theme_sir.button_pressed {
+    color: #ee8035;
+    background: #ee8035;
+    }
+
+.button_theme_sir.button_view_plain {
+    background: none;
+}
+
+.button_theme_sir.button_view_plain:before {
+    display: none;
+}
+
+.button_theme_sir.button_view_plain.button_pressed {
+    background: none;
+    }
+
+.button_theme_sir.button_view_plain.button_disabled {
+    background: none;
+    }
+
+.button_theme_sir.button_view_action {
+    color: #fff;
+    background: #404040;
+    }
+
+.button_theme_sir.button_view_action:before {
+    display: none;
+    }
+
+.button_theme_sir.button_view_action.button_disabled .button__text {
+    color: #fff;
+    }
+
+.button_theme_sir.button_view_action.button_hovered {
+    background: #fd9f5d;
+    }
+
+.button_theme_sir.button_view_action.button_pressed {
+    background: #ee8035;
+    }
+
+.button_theme_sir.button_view_action.button_focused-hard {
+    background: #ee8035;
+    box-shadow: none;
+    }
+
+.button_theme_sir.button_view_orange {
+    color: #fff;
+    background: #ffffff;
+}
+
+.button_theme_sir.button_view_orange:before {
+    background: #fd9f5d;
+}
+
+.button_theme_sir.button_view_orange.button_disabled {
+    opacity: 0.4;
+}
+
+.button_theme_sir.button_view_orange.button_hovered:before {
+    background: #ee8035;
+}
+
+.button_theme_sir.button_view_orange.button_pressed {
+    background: #ee8035;
+}
+
+.button_theme_sir.button_view_orange.button_focused-hard {
+    background: #ee8035;
+    box-shadow: none;
+}
+
+.button_theme_sir.button_disabled {
+    background: #e5e5e5;
+    }
+
+.button_theme_sir.button_disabled .button__text {
+    color: #e5e5e5;
+    }
+
+.button_theme_sir.button_disabled .icon {
+    opacity: 0.3;
+    }
+
+.button_theme_sir.button_size_m {
+    font-size: 11px;
+    line-height: 30px;
+    height: 30px;
+    min-width: 30px;
+    }
+
+.button_theme_sir.button_size_m .icon {
+    width: 30px;
+    }
+
+.button_theme_sir.button_size_m .button__text {
+    margin: 0 13px;
+    }
+
+.button_theme_sir.button_size_l {
+    font-size: 13px;
+    line-height: 40px;
+    height: 40px;
+    min-width: 40px;
+    }
+
+.button_theme_sir.button_size_l .icon {
+    width: 40px;
+    }
+
+.button_theme_sir.button_size_l .button__text {
+    margin: 0 15px;
+    }
+
+.button_theme_sir .icon + .button__text {
+    margin-left: 0;
+    }
+
+.button_theme_sir .button__text:not(:last-child) {
+    margin-right: 0;
+    }

@@ -1,0 +1,70 @@
+.dialog-window_theme_sir {
+    color: #414141;
+}
+
+.dialog-window_theme_sir .dialog-window__inner {
+    padding: 8px 8px 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    background: #ffffff;
+}
+
+.dialog-window_theme_sir .dialog-window__header {
+    height: 48px;
+    background: #5a5a5a;
+    margin: 0 0 32px;
+    padding: 0 12px;
+    font-size: 24px;
+    font-weight: 300;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 48px;
+    color: #ffffff;
+}
+
+.dialog-window_theme_sir .dialog-window__icon {
+    width: 48px;
+    height: 48px;
+    position: relative;
+    float: left;
+    margin: 0 15px 0 0;
+}
+
+.dialog-window_theme_sir .dialog-window__icon .icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+}
+
+.dialog-window_theme_sir .dialog-window__close {
+    float: right;
+    margin: 9px 0 0 15px;
+}
+
+.dialog-window_theme_sir .dialog-window__close .icon {
+    background-size: 24px auto;
+}
+
+.dialog-window_theme_sir .dialog-window__title {
+    margin: 0 32px 24px;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 42px;
+}
+
+.dialog-window_theme_sir .dialog-window__content {
+    margin: 0 32px 0;
+    font-size: 13px;
+    line-height: 1.23;
+}
+
+.dialog-window_theme_sir.dialog-window_size_m .dialog-window__inner {
+    width: 480px;
+}
+
+.dialog-window_theme_sir.dialog-window_size_l .dialog-window__inner {
+    width: 720px;
+}

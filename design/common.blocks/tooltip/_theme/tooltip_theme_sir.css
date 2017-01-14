@@ -1,0 +1,110 @@
+.tooltip__popup_theme_sir {
+    background: #333333;
+    border-radius: 3px;
+    font-size: 11px;
+    line-height: 1.27;
+    text-align: center;
+    color: #ffffff;
+    padding: 4px 10px;
+    box-shadow: none;
+    white-space: pre;
+}
+
+.tooltip__popup_theme_sir:before {
+    border-color: #333333;
+    border-style: solid;
+    content: '';
+    position: absolute;
+}
+
+.tooltip__popup_theme_sir.popup_direction_bottom-left,
+.tooltip__popup_theme_sir.popup_direction_bottom-center,
+.tooltip__popup_theme_sir.popup_direction_bottom-right {
+    border-top: 8px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_bottom-left:before,
+.tooltip__popup_theme_sir.popup_direction_bottom-center:before,
+.tooltip__popup_theme_sir.popup_direction_bottom-right:before {
+    border-width: 0 8px 8px 8px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -8px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_top-left,
+.tooltip__popup_theme_sir.popup_direction_top-center,
+.tooltip__popup_theme_sir.popup_direction_top-right {
+    border-bottom: 8px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_top-left:before,
+.tooltip__popup_theme_sir.popup_direction_top-center:before,
+.tooltip__popup_theme_sir.popup_direction_top-right:before {
+    border-width: 8px 8px 0 8px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_bottom-left:before,
+.tooltip__popup_theme_sir.popup_direction_top-left:before {
+    left : 0;
+    margin-left: 3px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_bottom-right:before,
+.tooltip__popup_theme_sir.popup_direction_top-right:before {
+    margin-left: -19px;
+    left : 100%;
+}
+
+.tooltip__popup_theme_sir.popup_direction_left-top,
+.tooltip__popup_theme_sir.popup_direction_left-center,
+.tooltip__popup_theme_sir.popup_direction_left-bottom {
+    border-right: 8px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_left-top:before,
+.tooltip__popup_theme_sir.popup_direction_left-center:before,
+.tooltip__popup_theme_sir.popup_direction_left-bottom:before {
+    border-width: 8px 0 8px 8px;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    left: 100%;
+    top: 50%;
+    margin-top: -8px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_right-top,
+.tooltip__popup_theme_sir.popup_direction_right-center,
+.tooltip__popup_theme_sir.popup_direction_right-bottom {
+    border-left: 8px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_right-top:before,
+.tooltip__popup_theme_sir.popup_direction_right-center:before,
+.tooltip__popup_theme_sir.popup_direction_right-bottom:before {
+    border-width: 8px 8px 8px 0;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    right: 100%;
+    top: 50%;
+    margin-top: -8px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_left-top:before,
+.tooltip__popup_theme_sir.popup_direction_right-top:before {
+    top: 0;
+    margin-top: 3px;
+}
+
+.tooltip__popup_theme_sir.popup_direction_left-bottom:before,
+.tooltip__popup_theme_sir.popup_direction_right-bottom:before {
+    top: 100%;
+    margin-top: -19px;
+}

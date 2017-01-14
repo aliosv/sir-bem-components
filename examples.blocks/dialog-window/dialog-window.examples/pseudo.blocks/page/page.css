@@ -1,0 +1,8 @@
+.page {
+    height: 600px;
+    background: #fd9f5d !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}

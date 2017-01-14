@@ -1,0 +1,33 @@
+.checkbox-tree_theme_simple.tree-view .tree-view__node {
+    line-height: 0;
+
+    padding-top: 5px;
+    }
+
+.checkbox-tree_theme_simple.tree-view > .tree-view__node:first-child {
+    padding-top: 0;
+    }
+
+.checkbox-tree_theme_simple.tree-view .tree-view__node_group > .tree-view__node {
+    margin-left: 7px;
+    padding-left: 10px;
+    }
+
+.checkbox-tree_theme_simple.tree-view .tree-view__node_group > .tree-view__node:before {
+    width: 1px;
+
+    background: #000;
+    }
+
+.checkbox-tree_theme_simple.tree-view .tree-view__node_group > .tree-view__node:last-child:before {
+    height: 14px;
+    }
+
+.checkbox-tree_theme_simple.tree-view .tree-view__node_group > .tree-view__node:after {
+    top: 14px;
+
+    width: 10px;
+    height: 1px;
+
+    background: #000;
+    }

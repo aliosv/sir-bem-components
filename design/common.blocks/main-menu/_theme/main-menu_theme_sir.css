@@ -1,0 +1,52 @@
+.main-menu_theme_sir {
+    width: 80px;
+    background: #5a5a5a;
+}
+
+.main-menu_theme_sir .main-menu__item {
+    opacity: .5;
+    width: 80px;
+    height: 80px;
+    position: relative;
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1.33;
+    letter-spacing: 0.5px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-menu_theme_sir .main-menu__item.link_hovered {
+    opacity: 1;
+}
+
+.main-menu_theme_sir .main-menu__item.main-menu__item_active {
+    opacity: 1;
+    background: #404040;
+    cursor: default;
+}
+
+.main-menu_theme_sir .main-menu__item_active:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: #ee8035;
+}
+
+.main-menu_theme_sir .main-menu__item .icon + .main-menu__text {
+    margin-top: 4px;
+}
+
+.main-menu_theme_sir .main-menu__item .icon:last-child {
+    width: 50px;
+    height: 50px;
+}
