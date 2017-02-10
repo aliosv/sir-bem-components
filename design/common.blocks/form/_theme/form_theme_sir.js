@@ -43,6 +43,13 @@ modules.define('form', [
             return;
         },
 
+        reset : function() {
+            this.domElem.get(0).reset();
+            this.hideErrors();
+
+            return this;
+        },
+
         updateWithPromise : function(promise) {
             var _this = this;
 
