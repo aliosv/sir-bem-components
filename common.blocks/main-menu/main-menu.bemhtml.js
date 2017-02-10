@@ -7,7 +7,7 @@ block('main-menu').content()(function() {
         return {
             block : 'link',
             mix : { block : 'main-menu', elem : 'item', elemMods : { active : active } },
-            url : !active ? item.url : undefined,
+            url : !active || ctx.enableActiveUrl ? item.url : undefined,
             content : [
                 item.icon,
                 item.text ? {

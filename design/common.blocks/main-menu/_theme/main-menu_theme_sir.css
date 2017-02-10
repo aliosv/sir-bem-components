@@ -29,7 +29,6 @@
 .main-menu_theme_sir .main-menu__item.main-menu__item_active {
     opacity: 1;
     background: #404040;
-    cursor: default;
 }
 
 .main-menu_theme_sir .main-menu__item_active:before {
