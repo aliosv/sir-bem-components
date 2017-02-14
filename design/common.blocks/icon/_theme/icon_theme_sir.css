@@ -1,19 +1,19 @@
-.icon {
+.icon_theme_sir {
     background-size: contain;
     background-position: 50% 50%;
 }
 
-.icon_size_s {
+.icon_theme_sir.icon_size_s {
     width: 16px;
     height: 16px;
 }
 
-.icon_size_m {
+.icon_theme_sir.icon_size_m {
     width: 24px;
     height: 24px;
 }
 
-.icon_size_l {
+.icon_theme_sir.icon_size_l {
     width: 32px;
     height: 32px;
 }
