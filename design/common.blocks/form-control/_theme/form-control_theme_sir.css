@@ -1,31 +1,43 @@
-.form-control_theme_sir.form-control_input {
+.form-control_theme_sir.form-control_input,
+.form-control_theme_sir.form-control_select {
     display: inline-block;
 }
 
-.form-control_theme_sir.form-control_input.form-control_width_available {
+.form-control_theme_sir.form-control_input .input,
+.form-control_theme_sir.form-control_select .select {
     width: 100%;
 }
 
-.form-control_theme_sir.form-control_input .form-control__label {
+.form-control_theme_sir.form-control_input.form-control_width_available,
+.form-control_theme_sir.form-control_select.form-control_width_available {
+    width: 100%;
+}
+
+.form-control_theme_sir.form-control_input .form-control__label,
+.form-control_theme_sir.form-control_select .form-control__label {
     font-size: 11px;
     line-height: 1.45;
     color: #999999;
     padding: 0 4px;
 }
 
-.form-control_theme_sir.form-control_input.form-control_empty .form-control__label {
+.form-control_theme_sir.form-control_input.form-control_empty .form-control__label,
+.form-control_theme_sir.form-control_select.form-control_empty .form-control__label {
     visibility: hidden;
 }
 
-.form-control_theme_sir.form-control_input.form-control_disabled .form-control__label {
+.form-control_theme_sir.form-control_input.form-control_disabled .form-control__label,
+.form-control_theme_sir.form-control_select.form-control_disabled .form-control__label {
     color: #e5e5e5;
 }
 
-.form-control_theme_sir.form-control_input.form-control_focused .form-control__label {
+.form-control_theme_sir.form-control_input.form-control_focused .form-control__label,
+.form-control_theme_sir.form-control_select.form-control_focused .form-control__label {
     color: #ee8035;
 }
 
-.form-control_theme_sir.form-control_input.form-control_error .form-control__label {
+.form-control_theme_sir.form-control_input.form-control_error .form-control__label,
+.form-control_theme_sir.form-control_select.form-control_error .form-control__label {
     color: #ca1329;
 }
 
@@ -49,7 +61,8 @@
     color: #ca1329;
 }
 
-.form-control_theme_sir.form-control_input.form-control_error .form-control__error {
+.form-control_theme_sir.form-control_input.form-control_error .form-control__error,
+.form-control_theme_sir.form-control_select.form-control_error .form-control__error {
     display: block;
     text-align: right;
 }
