@@ -11,9 +11,11 @@ modules.define('model', ['util'], function(provide, util) {
         array : {
             caption : 'Массив',
             cast : function(data) {
-                // например, группа чекбоксов с одним чекнутым инпутом возвратит не массив
                 if(Array.isArray(data)) return data;
 
+                var keyValues;
+
+                // когда массив представлен в виде строки
                 if(typeof data === 'string' && data[0] === '[') {
                     try {
                         return this.cast(JSON.parse(data));
@@ -22,6 +24,18 @@ modules.define('model', ['util'], function(provide, util) {
                     }
                 }
 
+                // когда массив представлен в виде объекта { 0 : '...', 1 : '...', ... }
+                if(typeof data === 'object') {
+                    keyValues = Object.keys(data).map(function(key) {
+                        return Number(key);
+                    }).sort(function(a, b) { return a - b; });
+
+                    if(keyValues.every(function(value, index) {return value === index;})) {
+                        return keyValues.map(function(key) { return data[key]; });
+                    }
+                }
+
+                // например, группа чекбоксов с одним чекнутым инпутом возвратит не массив
                 return [data];
             },
             validation : [function(value) { return Array.isArray(value) || 'Ожидается массив'; }]
