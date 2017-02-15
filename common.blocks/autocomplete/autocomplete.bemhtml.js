@@ -1,7 +1,7 @@
 block('autocomplete').def()(function() {
     return applyCtx({
         block : 'popup',
-        mix : { block : 'autocomplete', js : this.ctx.js || true, mods : this.ctx.mods },
+        mix : [{ block : 'autocomplete', js : this.ctx.js || true, mods : this.ctx.mods }].concat(this.ctx.mix),
         mods : { target : 'anchor', theme : 'islands' },
         directions : this.ctx.directions,
         content : [
