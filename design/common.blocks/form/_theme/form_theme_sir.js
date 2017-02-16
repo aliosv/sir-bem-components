@@ -50,6 +50,14 @@ modules.define('form', [
             return this;
         },
 
+        setVal : function(data) {
+            Object.keys(data).forEach(function(name) {
+                var block = this.findChildBlock({ block : FormControl, modName : 'name', modVal : name });
+
+                block && block.setVal && block.setVal(data[name]);
+            }, this);
+        },
+
         updateWithPromise : function(promise) {
             var _this = this;
 
