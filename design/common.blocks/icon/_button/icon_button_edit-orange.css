@@ -1,0 +1,7 @@
+.icon_button_edit-orange {
+    background-image: url(icon_button_edit-orange.svg);
+}
+
+.button .icon_button_edit-orange {
+    background-size: 40% auto;
+}

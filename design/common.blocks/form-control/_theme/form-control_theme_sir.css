@@ -3,6 +3,10 @@
     display: inline-block;
 }
 
+.form-control_theme_sir.form-control_input_hidden {
+    display: none;
+}
+
 .form-control_theme_sir.form-control_input .input,
 .form-control_theme_sir.form-control_select .select {
     width: 100%;

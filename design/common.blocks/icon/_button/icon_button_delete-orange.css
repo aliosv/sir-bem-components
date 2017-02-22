@@ -1,0 +1,7 @@
+.icon_button_delete-orange {
+    background-image: url(icon_button_delete-orange.svg);
+}
+
+.button .icon_button_delete-orange {
+    background-size: 60% auto;
+}
