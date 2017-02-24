@@ -22,6 +22,7 @@ modules.define('form', [
 
             this.hideErrors();
 
+            // TODO: как выводить ошибки валидации, если контрол не найден?
             if(validationErrors) {
                 Object.keys(validationErrors).forEach(function(key) {
                     var formControl = _this.findChildBlock({ block : FormControl, modName : 'name', modVal : key });
