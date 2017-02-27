@@ -1,0 +1,23 @@
+.icon_file_default {
+    background-image: url(icon_file_default.svg);
+}
+
+.icon_file_doc {
+    background-image: url(icon_file_doc.svg);
+}
+
+.icon_file_docx {
+    background-image: url(icon_file_docx.svg);
+}
+
+.icon_file_pdf {
+    background-image: url(icon_file_pdf.svg);
+}
+
+.icon_file_xls {
+    background-image: url(icon_file_xls.svg);
+}
+
+.icon_file_xlsx {
+    background-image: url(icon_file_xlsx.svg);
+}
