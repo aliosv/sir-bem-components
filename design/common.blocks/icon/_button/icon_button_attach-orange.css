@@ -1,0 +1,7 @@
+.icon_button_attach-orange {
+    background-image: url(icon_button_attach-orange.svg);
+}
+
+.button .icon_button_attach-orange {
+    background-size: 55% auto;
+}

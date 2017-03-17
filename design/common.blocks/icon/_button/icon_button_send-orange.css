@@ -1,0 +1,7 @@
+.icon_button_send-orange {
+    background-image: url(icon_button_send-orange.svg);
+}
+
+.button .icon_button_send-orange {
+    background-size: 60% auto;
+}
