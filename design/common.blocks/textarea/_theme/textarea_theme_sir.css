@@ -10,41 +10,54 @@
     margin: 0;
     padding: 0;
 
-    border:1px solid transparent;
-    border-bottom-color: #cbcbcb;
+    border: 0 solid #cbcbcb;
+    border-bottom-width: 1px;
     outline: none;
 
     -webkit-appearance: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
 .textarea_theme_sir::-webkit-input-placeholder {
     color: #999;
     text-indent: 0;
 }
+
 .textarea_theme_sir::-moz-placeholder {
     opacity: 1;
     color: #999;
 }
+
 .textarea_theme_sir.textarea_focused {
     border-radius: 3px;
     border-color: #fd9f5d;
+    border-width: 1px;
 }
+
 .textarea_theme_sir.textarea_width_available {
     width: 100%;
     resize: vertical;
 }
+
 .textarea_theme_sir.textarea_disabled {
     resize: none;
     cursor: default;
     color: #e5e5e5;
     background: #e5e5e5;
 }
+
 .textarea_theme_sir.textarea_size_l,
+    /* TODO: textarea__heightCalc get values with js? */
 .textarea__heightCalc_size_l {
     font-size: 15px;
     line-height: 20px;
-    padding: 5px 7px;
+    padding: 5px 7px 4px;
     min-height: 32px;
+}
+
+.textarea_theme_sir.textarea_size_l.textarea_focused,
+.textarea__heightCalc_size_l.textarea_focused {
+    padding: 4px 6px;
 }
 
 .textarea_theme_sir.textarea_size_l {
