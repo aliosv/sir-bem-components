@@ -4,4 +4,6 @@
     opacity: 0;
     z-index: -9999;
     margin: -9999px 0 0 -9999px;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
