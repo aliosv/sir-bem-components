@@ -1,0 +1,7 @@
+.textarea__heightCalc {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    z-index: -9999;
+    margin: -9999px 0 0 -9999px;
+}
