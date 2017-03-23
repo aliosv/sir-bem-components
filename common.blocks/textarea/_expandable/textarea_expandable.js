@@ -20,6 +20,7 @@ modules.define('textarea', [], function(provide, Block) {
                 this._heightCalcElem.innerHTML = e.target.getVal()
                     // make not empty last line for calc it's height
                     .replace(/(\s)$/, '$1 ');
+                // TODO: стоит постоянно проверять ширину textarea, подумать о нагрузке
                 this._heightCalcElem.style.width = e.target.domElem.outerWidth() + 'px';
 
                 this.domElem.css('height', this._heightCalcElem.offsetHeight);
