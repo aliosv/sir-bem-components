@@ -7,6 +7,12 @@ block('form-control').mod('theme', 'sir')(
         return applyNext();
     }),
 
+    mod('textarea').def()(function() {
+        if(!this.ctx.hasOwnProperty('val') || !this.ctx.val) this.mods.empty = true;
+
+        return applyNext();
+    }),
+
     mod('select').elem('control').def()(function() {
         // TODO: _theme_sir design
         // force use select_theme_islands
