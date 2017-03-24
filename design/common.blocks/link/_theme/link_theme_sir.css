@@ -2,6 +2,7 @@
     color: #5a78a6;
     font-weight: 500;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .link_theme_sir.link_disabled {
@@ -14,6 +15,7 @@
 
 .link_theme_sir.link_hovered {
     color: #ee8035;
+    text-decoration: underline;
 }
 
 .link_theme_sir.link_pressed {

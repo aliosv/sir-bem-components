@@ -8,6 +8,7 @@
         {
             block : 'link',
             mods : { theme : 'sir' },
+            url : '/',
             content : 'Ссылка'
         }
     ]
