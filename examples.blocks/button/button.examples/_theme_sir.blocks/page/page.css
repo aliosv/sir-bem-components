@@ -6,3 +6,7 @@
 .page .button_view_action .icon {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAbFBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8+T+BWAAAAI3RSTlMAzH7xYJD70rRyb+wE9saLGqeblXlnUkg3MB4K3r26q11aQi6MQRYAAADkSURBVDjL7dTJDsIgFIXho1W0dnKu1lne/x211NtTIDdxa+K/IAG+5QVsjZVWOfwq3m2QWbYMoLEMyXsxI9cWQZPSnSc9tGPEkZsPNJSaMw7OFiI1N513ECI1B4G6nNjWEVIyOkKRmnMwayFl7ASu5ToN5b132JkrkAOUDV2e9Q44YdjCnIcHpa2gtPTHp8G/X+tQe7snWDh/e+6OnLrY2dqDnqyS1JtnllI+kpU8BbpY8nHRKZKQLpaEdIoUSKdIgXSa7GBBp8nCQTpFhl9zuQvJ/uIuihZ+/9mPnXfd8gBuKNcvl1UqtPt2uR8AAAAASUVORK5CYII=);
     }
+
+.page .control-group {
+    margin: 20px;
+}

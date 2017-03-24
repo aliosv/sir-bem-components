@@ -77,6 +77,14 @@
     background: #ee8035;
     }
 
+.button_theme_sir.button_checked {
+    background: #ee8035;
+    color: #ee8035;
+}
+.button_theme_sir.button_checked:before {
+    background: #fff1e7;
+}
+
 .button_theme_sir.button_view_plain {
     background: none;
 }
@@ -194,3 +202,59 @@
 .button_theme_sir .button__text:not(:last-child) {
     margin-right: 0;
     }
+
+
+.control-group .button_checked + .button_theme_sir:before,
+.control-group .radio_checked + .radio .button_theme_sir:before,
+.control-group .checkbox_checked + .checkbox .button_theme_sir:before {
+    left: 0;
+}
+
+.control-group .button_theme_sir {
+    border-radius: 0;
+}
+
+.control-group .button_theme_sir:before {
+    right: 0;
+    border-radius: 0;
+}
+
+.control-group .button_theme_sir.button_checked:before {
+    right: 1px;
+}
+
+.control-group .button_theme_sir.button_focused-hard.button:before {
+    left: 0;
+}
+
+.control-group > .button_theme_sir:first-child,
+.control-group > :first-child .button_theme_sir,
+.control-group > :first-child.popup + .button_theme_sir {
+    border-radius: 3px 0 0 3px;
+}
+
+.control-group > .button_theme_sir:first-child:before, .control-group > :first-child .button_theme_sir:before, .control-group > :first-child.popup + .button_theme_sir:before {
+    border-radius: 2px 0 0 2px;
+}
+
+.control-group > .button_theme_sir:first-child.button_focused-hard.button:before, .control-group > :first-child .button_theme_sir.button_focused-hard.button:before, .control-group > :first-child.popup + .button_theme_sir.button_focused-hard.button:before {
+    left: 1px;
+}
+
+.control-group > .button_theme_sir:last-child,
+.control-group > :last-child .button_theme_sir {
+    border-radius: 0 3px 3px 0;
+}
+
+.control-group > .button_theme_sir:last-child:before, .control-group > :last-child .button_theme_sir:before {
+    border-radius: 0 2px 2px 0;
+    right: 1px;
+}
+
+.control-group > :only-child .button_theme_sir {
+    border-radius: 3px;
+}
+
+.control-group > :only-child .button_theme_sir:before {
+    border-radius: 2px;
+}

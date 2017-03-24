@@ -3,7 +3,9 @@ var sizes = ['m', 'l'],
     contents = ['text', 'text-icon', 'icon'],
     states = Array.prototype.concat.apply([], [
         [],
-        ['disabled']
+        ['checked'],
+        ['disabled'],
+        ['checked', 'disabled']
     ].map(function(value) {
             if(value.indexOf('disabled') > -1) return [value];
 
@@ -43,7 +45,7 @@ var sizes = ['m', 'l'],
                                 };
                             });
                         }),
-                        caption : 'content/view',
+                        caption : ri === 0 && ci === 0 ? 'content/view' : undefined,
                         cols : ri === 0 ? views : undefined,
                         rows : ci === 0 ? contents : undefined
                     };
@@ -52,6 +54,27 @@ var sizes = ['m', 'l'],
             caption : 'state/size',
             cols : sizes,
             rows : states,
+        },
+        { tag : 'br' },
+        {
+            block : 'control-group',
+            content : [
+                {
+                    block : 'button',
+                    mods : { checked : true, size : 'm', theme : 'sir' },
+                    text : 'Checked'
+                },
+                {
+                    block : 'button',
+                    mods : { size : 'm', theme : 'sir' },
+                    text : 'Button'
+                },
+                {
+                    block : 'button',
+                    mods : { disabled : true, size : 'm', theme : 'sir' },
+                    text : 'Disabled'
+                }
+            ]
         }
     ]
 })
