@@ -4,7 +4,7 @@
 }
 
 .main-menu_theme_sir .main-menu__item {
-    opacity: .5;
+    opacity: .7;
     width: 80px;
     height: 80px;
     position: relative;
@@ -22,8 +22,21 @@
     align-items: center;
 }
 
+.main-menu_theme_sir .main-menu__item:first-child {
+    opacity: 1;
+}
+
+.main-menu_theme_sir .main-menu__item.main-menu__item_active:first-child {
+    background: #fd9f5d;
+}
+
+.main-menu_theme_sir .main-menu__item.main-menu__item_active:first-child:before {
+    display: none;
+}
+
 .main-menu_theme_sir .main-menu__item.link_hovered {
     opacity: 1;
+    background: #404040;
 }
 
 .main-menu_theme_sir .main-menu__item.main-menu__item_active {
