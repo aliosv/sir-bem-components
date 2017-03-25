@@ -26,6 +26,11 @@
     opacity: 1;
 }
 
+.main-menu_theme_sir .main-menu__item:first-child .icon {
+    width: 40px !important;
+    height: 40px !important;
+}
+
 .main-menu_theme_sir .main-menu__item.main-menu__item_active:first-child {
     background: #fd9f5d;
 }
