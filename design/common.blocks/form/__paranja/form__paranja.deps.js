@@ -1,5 +1,5 @@
 ({
     shouldDeps : [
-        { block : 'spin', mods : { theme : 'islands' } }
+        { block : 'spin-progress', mods : { theme : 'islands' } }
     ]
 })

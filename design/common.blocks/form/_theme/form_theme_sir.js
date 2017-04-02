@@ -1,8 +1,18 @@
 /** @class form */
 modules.define('form', [
-    'i-bem-dom', 'BEMHTML', 'jquery', 'form-control'
-], function(provide, BEMDOM, BEMHTML, $, FormControl, Block) {
+    'i-bem-dom', 'BEMHTML', 'jquery', 'form-control', 'spin-progress'
+], function(provide, BEMDOM, BEMHTML, $, FormControl, SpinProgress, Block) {
     provide(Block.declMod({ modName : 'theme', modVal : 'sir' }, {
+        onSetMod : {
+            js : {
+                inited : function() {
+                    this.__base.apply(this, arguments);
+
+                    this._spinProgress = this.findChildBlock(SpinProgress);
+                }
+            }
+        },
+
         _errors : {},
 
         hideErrors : function() {
@@ -40,8 +50,6 @@ modules.define('form', [
             }
 
             this._emit('error', 'Произошла ошибка');
-
-            return;
         },
 
         reset : function() {
@@ -65,6 +73,12 @@ modules.define('form', [
             this
                 .hideErrors()
                 .setMod('pending', true);
+
+            _this._spinProgress.setVal('');
+
+            promise.progress(function(val) {
+                _this._spinProgress.setVal(val);
+            });
 
             promise.fail(function(err) {
                 _this.showErrors(err);
