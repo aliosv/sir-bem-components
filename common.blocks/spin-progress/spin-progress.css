@@ -1,0 +1,7 @@
+.spin-progress {
+    display: inline-block;
+}
+
+.spin-progress:not(.spin-progress_visible) {
+    display: none;
+}
