@@ -6,8 +6,10 @@
 !design/**/*
 !examples.blocks/**/*
 !.borschik
+!.bowerrc
 !.gitignore
 !.travis.yml
+!bower.json
 !build-examples-index.js
 !package.json
 !README.md
