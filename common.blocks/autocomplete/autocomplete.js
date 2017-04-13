@@ -28,7 +28,12 @@ modules.define('autocomplete', [
                     if(this.params.separator) this._separator = new RegExp(this.params.separator);
                     // 3) указать целевые инпуты, путем примиксовывания к ним блока с тем же ctx.js.id
                     if(this.domElem.length > 1) {
-                        this.setAnchor(_this.findMixedBlocks(Input).concat(_this.findMixedBlocks(Textarea)).toArray());
+                        this.setAnchor(
+                            _this.findMixedBlocks(Input)
+                                .concat(_this.findChildBlocks(Input))
+                                .concat(_this.findMixedBlocks(Textarea))
+                                .concat(_this.findChildBlocks(Textarea)).toArray()
+                        );
                     }
                 }
             }
