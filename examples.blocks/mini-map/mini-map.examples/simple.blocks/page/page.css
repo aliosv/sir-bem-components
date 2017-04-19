@@ -1,0 +1,20 @@
+.mini-map
+{
+    width: 225px;
+    height: 140px;
+
+    background: url(image.jpg) 50% 50% / contain no-repeat;
+}
+
+.mini-map__thumb
+{
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.image
+{
+    width: 400px;
+    height: 400px;
+
+    background: url(image.jpg) 50% 50% / 900px 560px no-repeat;
+}

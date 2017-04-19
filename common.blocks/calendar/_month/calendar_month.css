@@ -5,66 +5,6 @@
     display: inline-block;
 }
 
-.calendar_month .calendar__day-names
-{
-    white-space: nowrap;
-}
-
-.calendar_month .calendar__day-names .calendar__day-name
-{
-    font-size: 11px;
-
-    text-transform: uppercase;
-}
-
-.calendar_month .calendar__day-name_weekend,
-.calendar_month .calendar__day_weekend
-{
-    color: #f92400;
-}
-
-.calendar_month .calendar__day,
-.calendar_month .calendar__day-name
-{
-    font-size: 14px;
-    line-height: 32px;
-
-    display: inline-block;
-
-    width: 32px;
-
-    text-align: center;
-}
-
-.calendar_month .calendar__day,
-.calendar_month .calendar__day-name
-{
-    cursor: default;
-}
-
-.calendar_month > .calendar__day:not(.calendar__day_in-past):hover
-{
-    line-height: 30px;
-
-    width: 30px;
-
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.calendar_month .calendar__day_selected
-{
-    background: #fff1a8;
-}
-
-.calendar_month .calendar__day_in-past
-{
-    cursor: default;
-
-    opacity: 0.5;
-}
-
 .calendar_month .calendar__month-name
 {
     font-size: 14px;

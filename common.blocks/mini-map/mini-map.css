@@ -1,0 +1,22 @@
+.mini-map
+{
+    position: relative;
+
+    overflow: hidden;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+.mini-map__thumb
+{
+    position: absolute;
+
+    cursor: move;
+    transition: top left 0.1s linear;
+}
+
+.mini-map__thumb_hidden
+{
+    display: none;
+}

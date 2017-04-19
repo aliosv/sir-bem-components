@@ -9,9 +9,20 @@
             return {
                 block : 'calendar',
                 attrs : { style : 'margin:15px; vertical-align:top;' },
-                js : { date : new Date('2017-' + ('0' + (i + 1)).slice(-2) + '-01') },
-                mods : { month : true, theme : 'islands' }
+                mods : { month : true, theme : 'islands' },
+                date : new Date('2017-' + ('0' + (i + 1)).slice(-2) + '-01')
             };
-        })
+        }),
+        { tag : 'br' },
+        { tag : 'br' },
+        { tag : 'br' },
+        { tag : 'h3', content : 'Календарь с предустановленной датой' },
+        {
+            block : 'calendar',
+            attrs : { style : 'margin:15px; vertical-align:top;' },
+            js : { date : new Date() },
+            mods : { month : true, theme : 'islands' },
+            date : new Date()
+        }
     ]
 })
