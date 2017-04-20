@@ -1,0 +1,12 @@
+.form-control_theme_islands.form-control_error .form-control__control {
+    outline: 1px solid #ca1329;
+}
+
+.form-control_theme_islands .form-control__error {
+    margin-top: 1px;
+    color: #ca1329;
+}
+
+.form-control_theme_islands:not(.form-control_error) .form-control__error {
+    display: none;
+}

@@ -80,10 +80,12 @@ modules.define('form', [
                 _this._spinProgress.setVal(val);
             });
 
+            promise.always(function() {
+                _this.delMod('pending');
+            });
+
             promise.fail(function(err) {
                 _this.showErrors(err);
-            }).always(function() {
-                _this.delMod('pending');
             });
 
             return promise;
