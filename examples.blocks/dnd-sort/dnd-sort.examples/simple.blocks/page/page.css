@@ -1,0 +1,38 @@
+.dnd-sort:first-child
+{
+    width: 150px;
+    margin: 0 0 20px;
+}
+
+.dnd-sort__item
+{
+    font-size: 20px;
+    line-height: 50px;
+
+    display: inline-block;
+
+    width: 50px;
+
+    text-align: center;
+    vertical-align: top;
+}
+
+.dnd-sort:last-of-type .dnd-sort__item
+{
+    position: relative;
+
+    margin: 5px;
+    padding-right: 10px;
+
+    border: 1px solid #ccc;
+}
+
+.dnd-sort:last-of-type .dnd-sort__handle
+{
+    font-size: 15px;
+    line-height: normal;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+}
