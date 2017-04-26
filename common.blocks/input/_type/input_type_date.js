@@ -87,7 +87,9 @@ modules.define('input', [
             },
 
             focused : function(modName, modVal) {
-                modVal && this._popup.setMod('visible', true);
+                // TODO: delMod делать не нужно, popup_autoclosable должен закрываться сам, но есть бага со всплытием
+                // события при клике на такой же инпут
+                this._popup.setMod('visible', !!modVal);
             }
         },
 
