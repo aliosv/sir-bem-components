@@ -53,7 +53,7 @@ function configureFiles(nodeConfig, fromBemjson) {
  * @param {Object} nodeConfig
  */
 function configureBemhtml(nodeConfig) {
-    nodeConfig.addTechs([[bemhtml, { devMode : false }]]);
+    nodeConfig.addTechs([[bemhtml, { engineOptions : { elemJsInstances : true }, devMode : false }]]);
 
     nodeConfig.addTargets(['?.bemhtml.js']);
 }
