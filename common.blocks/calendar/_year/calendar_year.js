@@ -37,8 +37,7 @@ modules.define('calendar', ['mini-map', 'jquery'], function(provide, MiniMap, $,
                         _this._elem('visible').domElem.scrollTop(_this._map.getVal().y * hiddenHeight);
                     });
 
-                    // TODO:
-                    this._domEvents('visible').on('scroll', function() {
+                    this._elem('visible')._domEvents().on('scroll', function() {
                         _this._map.setVal({
                             y : _this._elem('visible').domElem.scrollTop() / hiddenHeight
                         });
