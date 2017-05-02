@@ -22,6 +22,12 @@ modules.define('input', [
                         alias : 'dd.mm.yyyy'
                     });
 
+                    // jQuery.inputmask блокирует всплытие события click, нужного для функционирования блока
+                    // popup_autoclosable
+                    this._elem('control').domElem.on('click', function() {
+                        _this.domElem.click();
+                    });
+
                     try {
                         this._date = getDate();
                         this._date.toISOString();
@@ -87,9 +93,7 @@ modules.define('input', [
             },
 
             focused : function(modName, modVal) {
-                // TODO: delMod делать не нужно, popup_autoclosable должен закрываться сам, но есть бага со всплытием
-                // события при клике на такой же инпут
-                this._popup.setMod('visible', !!modVal);
+                modVal && this._popup.setMod('visible', true);
             }
         },
 
