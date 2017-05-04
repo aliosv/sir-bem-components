@@ -13,16 +13,6 @@ block('form-control').mod('theme', 'sir')(
         return applyNext();
     }),
 
-    mod('select').elem('control').def()(function() {
-        // TODO: _theme_sir design
-        // force use select_theme_islands
-        this.ctx.content[0].mods.theme = 'islands';
-
-        return applyNext({
-            ctx : this.ctx
-        });
-    }),
-
     mod('upload', 'avatar').elem('control').attrs()({ accept : 'image/*' }),
     mod('upload', 'project-cover').elem('control').attrs()({ accept : 'image/*' })
 );
