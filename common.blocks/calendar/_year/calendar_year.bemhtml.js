@@ -45,20 +45,7 @@ block('calendar').mod('year')(
         return [
             {
                 elem : 'years',
-                content : [
-                    { elem : 'years-toggle', content : currentYear - 2 },
-                    { elem : 'years-toggle', content : currentYear - 1 },
-                    {
-                        block : 'input',
-                        mods : { size : 'm', theme : 'islands' },
-                        // TODO: targetYear
-                        val : currentYear,
-                        placeholder : 'Год',
-                        maxLength : 4
-                    },
-                    { elem : 'years-toggle', content : currentYear + 1 },
-                    { elem : 'years-toggle', content : currentYear + 2 }
-                ]
+                targetYear : currentYear
             },
             {
                 elem : 'list',
@@ -100,6 +87,28 @@ block('calendar').mod('year')(
             }
         ];
     }),
+
+    elem('years')(
+        js()(true),
+
+        content()(function() {
+            var targetYear = Number(this.ctx.targetYear);
+
+            return [
+                { elem : 'years-toggle', content : targetYear - 2 },
+                { elem : 'years-toggle', content : targetYear - 1 },
+                {
+                    block : 'input',
+                    mods : { size : 'm', theme : 'islands' },
+                    val : targetYear,
+                    placeholder : 'Год',
+                    maxLength : 4
+                },
+                { elem : 'years-toggle', content : targetYear + 1 },
+                { elem : 'years-toggle', content : targetYear + 2 }
+            ];
+        })
+    ),
 
     elem('years-toggle').attrs()({ title : 'Установить год' })
 );

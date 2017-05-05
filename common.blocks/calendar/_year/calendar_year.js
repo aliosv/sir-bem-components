@@ -1,5 +1,5 @@
 /** @class calendar */
-modules.define('calendar', ['mini-map', 'jquery'], function(provide, MiniMap, $, Block) {
+modules.define('calendar', ['mini-map', 'jquery', 'calendar__years'], function(provide, MiniMap, $, __years, Block) {
     provide(Block.declMod({ modName : 'year', modVal : true }, /** @lends calendar.prototype */{
         onSetMod : {
             js : {
@@ -64,4 +64,38 @@ modules.define('calendar', ['mini-map', 'jquery'], function(provide, MiniMap, $,
             return this;
         }
     }, /** @lends calendar */{}));
+});
+
+
+/** @class calendar */
+modules.define('calendar__years', ['i-bem-dom', 'BEMHTML', 'input'], function(provide, BEMDOM, BEMHTML, Input) {
+    provide(BEMDOM.declElem('calendar', 'years', /** @lends calendar.prototype */{
+        _update : function(year) {
+            BEMDOM.replace(this.domElem, BEMHTML.apply({
+                block : 'calendar',
+                elem : 'years',
+                targetYear : year
+            }));
+        }
+    }, /** @lends calendar */{
+        onInit : function() {
+            this._events(Input).on('change', function(e) {
+                var year = e.target.getVal();
+
+                if(year.length !== 4) return;
+
+                this
+                    ._emit('change', year)
+                    ._update(year);
+            });
+
+            this._domEvents('years-toggle').on('click', function(e) {
+                var year = e.target.innerHTML;
+
+                this
+                    ._emit('change', year)
+                    ._update(year);
+            });
+        }
+    }));
 });
