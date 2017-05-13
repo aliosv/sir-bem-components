@@ -1,4 +1,4 @@
-block('calendar').mod('month')(
+block('calendar-month')(
     js()(true),
 
     match(function() {

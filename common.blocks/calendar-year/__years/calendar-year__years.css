@@ -1,0 +1,30 @@
+.calendar-year__years {
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+}
+
+.calendar-year__years-toggle {
+    margin: 0 13px;
+    opacity: 0.6;
+    cursor: pointer;
+}
+.calendar-year__years-toggle:nth-child(1),
+.calendar-year__years-toggle:nth-last-child(1) {
+    opacity: 0.3;
+}
+
+.calendar-year__years-toggle:hover {
+    opacity: 1;
+    color: #f92400;
+}
+
+.calendar-year__years .input {
+    width: 50px;
+}
+
+.calendar-year__years .input__control {
+    text-align: center;
+}

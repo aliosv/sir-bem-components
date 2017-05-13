@@ -1,4 +1,4 @@
-.calendar__day {
+.calendar-month__day {
     display: inline-block;
 
     width: 32px;
@@ -10,7 +10,7 @@
     line-height: 32px;
 }
 
-.calendar__day:not(.calendar__day_in-past):hover
+.calendar-month__day:not(.calendar-month__day_in-past):hover
 {
     line-height: 30px;
 
@@ -21,17 +21,17 @@
     cursor: pointer;
 }
 
-.calendar__day_weekend
+.calendar-month__day_weekend
 {
     color: #f92400;
 }
 
-.calendar__day_selected
+.calendar-month__day_selected
 {
     background: #fff1a8;
 }
 
-.calendar__day_in-past
+.calendar-month__day_in-past
 {
     cursor: default;
 

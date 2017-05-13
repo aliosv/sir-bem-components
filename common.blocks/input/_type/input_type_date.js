@@ -1,6 +1,6 @@
 /** @class input */
 modules.define('input', [
-    'i-bem-dom', 'BEMHTML', 'popup', 'calendar', 'jquery__inputmask'
+    'i-bem-dom', 'BEMHTML', 'popup', 'calendar-month', 'jquery__inputmask'
 ], function(provide, BEMDOM, BEMHTML, Popup, Calendar, $, Block) {
     provide(Block.declMod({ modName : 'type', modVal : 'date' }, /** @lends input.prototype */{
         onSetMod : {
@@ -105,9 +105,9 @@ modules.define('input', [
 
         _updateCalendar : function() {
             var calendar = BEMDOM.init(BEMHTML.apply({
-                block : 'calendar',
+                block : 'calendar-month',
                 js : { date : this._date.toISOString() },
-                mods : { month : true, theme : 'islands' }
+                mods : { theme : 'islands' }
             })).bem(Calendar);
 
             if(this._calendar) {

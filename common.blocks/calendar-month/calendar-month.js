@@ -1,11 +1,9 @@
-/** @class calendar */
-modules.define('calendar', ['jquery'], function(provide, $, Block) {
-    provide(Block.declMod({ modName : 'month', modVal : true }, /** @lends calendar.prototype */{
+/** @class calendar-month */
+modules.define('calendar-month', ['i-bem-dom'], function(provide, BEMDOM) {
+    provide(BEMDOM.declBlock(this.name, /** @lends calendar-month.prototype */{
         onSetMod : {
             js : {
                 inited : function() {
-                    this.__base.apply(this, arguments);
-
                     if(this.params.date) {
                         this._val = new Date(this.params.date);
                     }
@@ -36,7 +34,7 @@ modules.define('calendar', ['jquery'], function(provide, $, Block) {
 
             return this;
         }
-    }, /** @lends calendar */{
+    }, /** @lends calendar-month */{
         onInit : function() {
             this._domEvents('day').on('click', function(e) {
                 this.setVal(new Date(this.params.year, this.params.month, Number(e.currentTarget.innerText)));

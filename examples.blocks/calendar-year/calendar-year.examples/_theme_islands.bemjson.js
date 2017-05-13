@@ -2,15 +2,14 @@
     block : 'page',
     js : true,
     title : 'Calendar year',
-    head : [{ elem : 'css', url : '__year.css' }],
-    scripts : [{ elem : 'js', url : '__year.js' }],
+    head : [{ elem : 'css', url : '__theme_islands.css' }],
+    scripts : [{ elem : 'js', url : '__theme_islands.js' }],
     mods : { theme : 'islands' },
     content : [
         {
-            block : 'calendar',
+            block : 'calendar-year',
             attrs : { style : 'margin:15px; vertical-align:top;' },
-            js : { date : new Date(), year : '2017' },
-            mods : { year : true, theme : 'islands' }
+            mods : { theme : 'islands' }
         },
         { tag : 'br' },
         { tag : 'br' },

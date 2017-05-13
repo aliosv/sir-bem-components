@@ -1,0 +1,19 @@
+/** @class calendar-year */
+modules.define('calendar-year__years', ['i-bem-dom', 'input'], function(provide, BEMDOM, Input) {
+    provide(BEMDOM.declElem('calendar-year', 'years', /** @lends calendar-year.prototype */{
+    }, /** @lends calendar-year */{
+        onInit : function() {
+            this._events(Input).on('change', function(e) {
+                var year = e.target.getVal();
+
+                if(year.length !== 4) return;
+
+                this._emit('change', year);
+            });
+
+            this._domEvents('years-toggle').on('click', function(e) {
+                this._emit('change', e.target.innerHTML);
+            });
+        }
+    }));
+});

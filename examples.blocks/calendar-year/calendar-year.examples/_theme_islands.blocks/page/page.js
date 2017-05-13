@@ -1,5 +1,5 @@
 /** @class page */
-modules.define('page', ['i-bem-dom', 'calendar'], function(provide, BEMDOM, Calendar) {
+modules.define('page', ['i-bem-dom', 'calendar-year'], function(provide, BEMDOM, Calendar) {
     provide(BEMDOM.declBlock(this.name, /** @lends page.prototype */{
         onSetMod : {
             js : {
