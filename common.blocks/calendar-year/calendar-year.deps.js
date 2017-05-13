@@ -7,7 +7,9 @@
     },
     {
         shouldDeps : [
-            { elems : ['inner', 'years'] }
+            { elems : ['inner', 'years'] },
+            'calendar-month',
+            'input'
         ]
     }
 ])
