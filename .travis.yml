@@ -11,9 +11,10 @@ after_success: |
     cd "$TRAVIS_BUILD_DIR"
 
     git clone --single-branch -b gh-pages https://github.com/aliosv/sir-bem-components.git
-    rm -rf sir-bem-components/desktop.examples
-    cp -r desktop.examples sir-bem-components
-    cp -r index.html sir-bem-components
+    rm -rf sir-bem-components/$TRAVIS_BRANCH
+    mkdir sir-bem-components/$TRAVIS_BRANCH
+    cp -r desktop.examples sir-bem-components/$TRAVIS_BRANCH
+    cp -r index.html sir-bem-components/$TRAVIS_BRANCH
 
     cd sir-bem-components
     git add --all
