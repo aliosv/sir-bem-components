@@ -1,0 +1,15 @@
+@import "../../../node_modules/bem-components/design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/i-font/_ubuntu/i-font_ubuntu.css";
+@import "../../../node_modules/bem-components/common.blocks/input/input.css";
+@import "../../../node_modules/bem-components/design/common.blocks/input/_theme/input_theme_islands.css";
+@import "../../../common.blocks/autocomplete/autocomplete.css";
+@import "../../../node_modules/bem-components/common.blocks/textarea/textarea.css";
+@import "../../../node_modules/bem-components/common.blocks/menu/menu.css";
+@import "../../../node_modules/bem-components/common.blocks/menu/__item/menu__item.css";
+@import "../../../node_modules/bem-components/common.blocks/popup/popup.css";
+@import "../../../node_modules/bem-components/common.blocks/z-index-group/z-index-group.css";
+@import "../../../node_modules/bem-components/design/common.blocks/popup/_theme/popup_theme_islands.css";
+@import "../../../node_modules/bem-components/design/common.blocks/spin/_theme/spin_theme_islands.css";
+@import "../../../node_modules/bem-components/design/common.blocks/menu/_theme/menu_theme_islands.css";
+@import "../../../node_modules/bem-components/design/common.blocks/menu/__item/_theme/menu__item_theme_islands.css";

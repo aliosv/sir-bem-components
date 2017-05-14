@@ -1,0 +1,6 @@
+@import "../../../node_modules/bem-components/design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/i-font/_ubuntu/i-font_ubuntu.css";
+@import "../../../node_modules/bem-components/common.blocks/button/button.css";
+@import "../../../node_modules/bem-components/design/common.blocks/button/_theme/button_theme_islands.css";
+@import "../../../common.blocks/button/_type/button_type_file.css";

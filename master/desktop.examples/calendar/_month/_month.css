@@ -1,0 +1,4 @@
+@import "../../../node_modules/bem-components/design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/i-font/_ubuntu/i-font_ubuntu.css";
+@import "../../../common.blocks/calendar/_month/calendar_month.css";

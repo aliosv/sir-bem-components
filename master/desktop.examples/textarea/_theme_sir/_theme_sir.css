@@ -1,0 +1,7 @@
+@import "../../../node_modules/bem-components/design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/i-font/_ubuntu/i-font_ubuntu.css";
+@import "../../../node_modules/bem-components/common.blocks/textarea/textarea.css";
+@import "../../../node_modules/bem-components/common.blocks/input/input.css";
+@import "../../../common.blocks/textarea/_expandable/textarea_expandable.css";
+@import "../../../design/common.blocks/textarea/_theme/textarea_theme_sir.css";
