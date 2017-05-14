@@ -1,0 +1,7 @@
+@import "../../../node_modules/bem-components/design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/i-font/_ubuntu/i-font_ubuntu.css";
+@import "../../../common.blocks/tree-view/tree-view.css";
+@import "../../../node_modules/bem-components/common.blocks/checkbox/checkbox.css";
+@import "../../../design/common.blocks/checkbox/_theme/checkbox_theme_sir.css";
+@import "../../../design/common.blocks/checkbox-tree/_theme/checkbox-tree_theme_sir.css";

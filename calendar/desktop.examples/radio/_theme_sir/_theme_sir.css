@@ -1,0 +1,6 @@
+@import "_theme_sir.blocks/page/page.css";
+@import "../../../node_modules/bem-components/design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/i-font/_ubuntu/i-font_ubuntu.css";
+@import "../../../node_modules/bem-components/common.blocks/radio/radio.css";
+@import "../../../design/common.blocks/radio/_theme/radio_theme_sir.css";
