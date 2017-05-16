@@ -1,0 +1,6 @@
+.calendar-month_mark-past-days .calendar-month__day_in-past
+{
+    cursor: default;
+
+    opacity: 0.5;
+}

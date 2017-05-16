@@ -1,0 +1,3 @@
+.calendar-month_friday .calendar-month__day_friday:not(.calendar-month__day_selected) {
+    background: #80d87b;
+}

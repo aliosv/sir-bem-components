@@ -2,14 +2,11 @@ block('calendar-month')(
     js()(true),
 
     match(function() {
-        return !this.ctx.js || !this.ctx.js.hasOwnProperty('month') || !this.ctx.js.hasOwnProperty('year');
+        return !this.ctx.js || !this.ctx.js.hasOwnProperty('date');
     }).def()(function() {
-        var targetDate = this.ctx.date || new Date();
-
         return applyCtx(this.extend(this.ctx, {
             js : this.extend(this.ctx.js, {
-                year : targetDate.getFullYear(),
-                month : targetDate.getMonth()
+                date : new Date()
             })
         }));
     }),
@@ -18,27 +15,15 @@ block('calendar-month')(
         var _months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь',
             'Ноябрь', 'Декабрь'],
 
-            now = new Date(),
-            // текущая дата
-            currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-            // выбранная дата в календаре
-            selectedDate = this.ctx.js.date && new Date(this.ctx.js.date),
-            targetYear = this.ctx.js.year,
+            date = this.ctx.js.date,
+            targetYear = date.getFullYear(),
             // индекс месяца в году (0-11)
-            targetMonth = this.ctx.js.month,
-            // индекс выбранного дня месяца (0-...)
-            selectedDayIndex,
+            targetMonth = date.getMonth(),
             targetMonthDate = new Date(targetYear, targetMonth),
         // кол-во дней в месяце (1-31)
             nDays = new Date(targetYear, targetMonth + 1, 0).getDate(),
         // индекс первого дня месяца в неделе (0(monday) - 6(sunday))
             firstDayIndex = (targetMonthDate.getDay() || 7) - 1;
-
-        if(selectedDate &&
-            selectedDate.getFullYear() === targetYear &&
-            selectedDate.getMonth() === targetMonth) {
-            selectedDayIndex = selectedDate.getDate() - 1;
-        }
 
         return [
             { elem : 'day-names' },
@@ -52,20 +37,16 @@ block('calendar-month')(
                 content : _months[targetMonth]
             },
             (new Array(nDays)).join(' ').split(' ').map(function(v, i) {
-                targetMonthDate.setDate(i + 1);
-
                 return {
                     elem : 'day',
                     elemMods : {
-                        'in-past' : currentDate > targetMonthDate || undefined,
-                        selected : selectedDayIndex === i || undefined,
-                        weekend : [5, 6].indexOf((firstDayIndex + i) % 7) > -1 ?
-                            true :
-                            undefined
+                        weekend : [5, 6].indexOf((firstDayIndex + i) % 7) > -1 ? true : undefined
                     },
-                    content : i + 1
+                    calendarCtx : this.ctx,
+                    calendarDate : date,
+                    dayIndex : i + 1
                 };
-            })
+            }, this)
         ];
     })
 );

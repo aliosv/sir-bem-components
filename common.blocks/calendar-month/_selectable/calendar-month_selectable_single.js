@@ -1,0 +1,59 @@
+/** @class calendar-month */
+modules.define('calendar-month', [], function(provide, Block) {
+    provide(Block.declMod({ modName : 'selectable', modVal : 'single' }, /** @lends calendar-month.prototype */{
+        onSetMod : {
+            js : {
+                inited : function() {
+                    this.__base.apply(this, arguments);
+
+                    var selected = this.findChildElem({ elem : 'day', modName : 'selected', modVal : true });
+
+                    this._date = new Date(this.params.date);
+
+                    if(selected) {
+                        this._val = new Date(this._date.getFullYear(), this._date.getMonth(), selected.getDate());
+                    }
+
+                    this._events('day').on('click', function(e) {
+                        this.setVal(new Date(this._date.getFullYear(), this._date.getMonth(), e.target.getDate()));
+                    });
+                }
+            }
+        },
+
+        _checkRange : function(date) {
+            return date.getFullYear() === this._date.getFullYear() &&
+                date.getMonth() === this._date.getMonth();
+        },
+
+        getDayByDate : function(date) {
+            if(!date || !this._checkRange(date)) return;
+
+            return this._elems('day').get(date.getDate() - 1);
+        },
+
+        getVal : function() {
+            return this._val;
+        },
+
+        setVal : function(date) {
+            if(this._val === date) return this;
+
+            if(!this._checkRange(date)) {
+                // TODO: edit message
+                console.warn('Out of range');
+
+                return this.setVal();
+            }
+
+            this._val = date;
+
+            this.findChildElems({ elem : 'day', modName : 'selected', modVal : true }).delMod('selected');
+            this._val && this.getDayByDate(this._val).setMod('selected', true);
+
+            this._emit('change');
+
+            return this;
+        }
+    }, /** @lends calendar-month */{}));
+});
