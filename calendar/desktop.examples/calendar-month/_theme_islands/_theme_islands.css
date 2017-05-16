@@ -4,3 +4,6 @@
 @import "../../../common.blocks/calendar-month/calendar-month.css";
 @import "../../../common.blocks/calendar-month/__day/calendar-month__day.css";
 @import "../../../common.blocks/calendar-month/__day-names/calendar-month__day-names.css";
+@import "../../../common.blocks/calendar-month/_mark-past-days/calendar-month_mark-past-days.css";
+@import "../../../common.blocks/calendar-month/_selectable/calendar-month_selectable.css";
+@import "_theme_islands.blocks/calendar-month/_friday/calendar-month_friday.css";

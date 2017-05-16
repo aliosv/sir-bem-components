@@ -7,6 +7,7 @@
 @import "../../../common.blocks/calendar-month/calendar-month.css";
 @import "../../../common.blocks/calendar-month/__day/calendar-month__day.css";
 @import "../../../common.blocks/calendar-month/__day-names/calendar-month__day-names.css";
+@import "../../../common.blocks/calendar-month/_selectable/calendar-month_selectable.css";
 @import "../../../common.blocks/calendar-year/__years/calendar-year__years.css";
 @import "../../../node_modules/bem-components/common.blocks/input/input.css";
 @import "../../../node_modules/bem-components/design/common.blocks/input/_theme/input_theme_islands.css";

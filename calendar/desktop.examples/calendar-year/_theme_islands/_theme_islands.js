@@ -25,6 +25,8 @@
 /*borschik:include:../../../common.blocks/calendar-year/__inner/calendar-year__inner.js*/
 /*borschik:include:../../../common.blocks/mini-map/mini-map.browser.js*/
 /*borschik:include:../../../common.blocks/calendar-month/calendar-month.js*/
+/*borschik:include:../../../common.blocks/calendar-month/__day/calendar-month__day.js*/
+/*borschik:include:../../../common.blocks/calendar-month/_selectable/calendar-month_selectable_single.js*/
 /*borschik:include:../../../common.blocks/calendar-year/__years/calendar-year__years.js*/
 /*borschik:include:../../../node_modules/bem-components/common.blocks/input/input.js*/
 /*borschik:include:../../../node_modules/bem-components/desktop.blocks/input/input.js*/
@@ -2223,8 +2225,8 @@ block('calendar-year').elem('inner')(
                             elem : 'months',
                             content : calendar.map(function(month) {
                                 return {
-                                    block : 'calendar-month',
-                                    mods : { theme : this.ctx.theme },
+                                    elem : 'month',
+                                    theme : this.ctx.theme,
                                     date : month.date
                                 };
                             }, this)
@@ -2249,14 +2251,11 @@ block('calendar-month')(
     js()(true),
 
     match(function() {
-        return !this.ctx.js || !this.ctx.js.hasOwnProperty('month') || !this.ctx.js.hasOwnProperty('year');
+        return !this.ctx.js || !this.ctx.js.hasOwnProperty('date');
     }).def()(function() {
-        var targetDate = this.ctx.date || new Date();
-
         return applyCtx(this.extend(this.ctx, {
             js : this.extend(this.ctx.js, {
-                year : targetDate.getFullYear(),
-                month : targetDate.getMonth()
+                date : new Date()
             })
         }));
     }),
@@ -2265,27 +2264,15 @@ block('calendar-month')(
         var _months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь',
             'Ноябрь', 'Декабрь'],
 
-            now = new Date(),
-            // текущая дата
-            currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-            // выбранная дата в календаре
-            selectedDate = this.ctx.js.date && new Date(this.ctx.js.date),
-            targetYear = this.ctx.js.year,
+            date = this.ctx.js.date,
+            targetYear = date.getFullYear(),
             // индекс месяца в году (0-11)
-            targetMonth = this.ctx.js.month,
-            // индекс выбранного дня месяца (0-...)
-            selectedDayIndex,
+            targetMonth = date.getMonth(),
             targetMonthDate = new Date(targetYear, targetMonth),
         // кол-во дней в месяце (1-31)
             nDays = new Date(targetYear, targetMonth + 1, 0).getDate(),
         // индекс первого дня месяца в неделе (0(monday) - 6(sunday))
             firstDayIndex = (targetMonthDate.getDay() || 7) - 1;
-
-        if(selectedDate &&
-            selectedDate.getFullYear() === targetYear &&
-            selectedDate.getMonth() === targetMonth) {
-            selectedDayIndex = selectedDate.getDate() - 1;
-        }
 
         return [
             { elem : 'day-names' },
@@ -2299,25 +2286,36 @@ block('calendar-month')(
                 content : _months[targetMonth]
             },
             (new Array(nDays)).join(' ').split(' ').map(function(v, i) {
-                targetMonthDate.setDate(i + 1);
-
                 return {
                     elem : 'day',
                     elemMods : {
-                        'in-past' : currentDate > targetMonthDate || undefined,
-                        selected : selectedDayIndex === i || undefined,
-                        weekend : [5, 6].indexOf((firstDayIndex + i) % 7) > -1 ?
-                            true :
-                            undefined
+                        weekend : [5, 6].indexOf((firstDayIndex + i) % 7) > -1 ? true : undefined
                     },
-                    content : i + 1
+                    calendarCtx : this.ctx,
+                    calendarDate : date,
+                    dayIndex : i + 1
                 };
-            })
+            }, this)
         ];
     })
 );
 
 /* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/calendar-month.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/__day/calendar-month__day.bemhtml.js */
+block('calendar-month').elem('day')(
+    js()(true),
+
+    // TODO: WTF??? get rid of this
+    def()(function() {
+        return applyNext(this.ctx);
+    }),
+
+    content()(function() {
+        return this.ctx.dayIndex;
+    })
+);
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/__day/calendar-month__day.bemhtml.js */
 /* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/__day-names/calendar-month__day-names.bemhtml.js */
 block('calendar-month').elem('day-names').content()(function() {
     return ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'].map(function(dayCaption, index) {
@@ -2329,6 +2327,46 @@ block('calendar-month').elem('day-names').content()(function() {
 });
 
 /* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/__day-names/calendar-month__day-names.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/__month/calendar-year__month.bemhtml.js */
+block('calendar-year').elem('month').def()(function() {
+    return applyCtx({
+        block : 'calendar-month',
+        mods : { selectable : 'single', theme : this.ctx.theme },
+        js : { date : this.ctx.date },
+        mix : { block : 'calendar-year', elem : 'month' }
+        // TODO: val
+    });
+});
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/__month/calendar-year__month.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/_selectable/calendar-month_selectable_single.bemhtml.js */
+block('calendar-month').mod('selectable', 'single')(
+    // Удалить val из контекста, если оно вне границ текущего месяца
+    match(function() {
+        var val = this.ctx.val,
+            date = this.ctx.js.date;
+
+        return val && (val.getFullYear() !== date.getFullYear() || val.getMonth() !== date.getMonth());
+    }).def()(function() {
+        return applyCtx(this.extend(this.ctx, { val : undefined }));
+    }),
+
+    match(function() {
+        return this.ctx.calendarCtx.val;
+    }).elem('day')
+        // TODO: why i can't use elemMods here?
+        .def()(function() {
+        return applyNext({
+            ctx : this.extend(this.ctx, {
+                elemMods : this.extend(this.ctx.elemMods, {
+                    selected : this.ctx.calendarCtx.val.getDate() === this.ctx.dayIndex
+                })
+            })
+        });
+    })
+);
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/_selectable/calendar-month_selectable_single.bemhtml.js */
 /* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/__years/calendar-year__years.bemhtml.js */
 block('calendar-year')(
     elem('years')(

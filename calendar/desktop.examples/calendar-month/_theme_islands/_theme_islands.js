@@ -21,6 +21,8 @@
 /*borschik:include:../../../node_modules/bem-core/common.blocks/events/events.vanilla.js*/
 /*borschik:include:../../../node_modules/bem-core/common.blocks/i-bem-dom/__init/_auto/i-bem-dom__init_auto.js*/
 /*borschik:include:../../../common.blocks/calendar-month/calendar-month.js*/
+/*borschik:include:../../../common.blocks/calendar-month/__day/calendar-month__day.js*/
+/*borschik:include:../../../common.blocks/calendar-month/_selectable/calendar-month_selectable_single.js*/
 var BEMHTML;
 
 (function(global) {
