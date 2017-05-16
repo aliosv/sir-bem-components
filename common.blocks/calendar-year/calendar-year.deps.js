@@ -2,13 +2,12 @@
     {
         tech : 'js',
         shouldDeps : [
-            { block : 'calendar-year', tech : 'bemhtml' }
+            { block : 'calendar-year', mods : { selectable : true }, tech : 'bemhtml' }
         ]
     },
     {
         shouldDeps : [
-            { elems : ['inner', 'years'] },
-            'calendar-month',
+            { elems : ['inner', 'month', 'years'] },
             'input'
         ]
     }

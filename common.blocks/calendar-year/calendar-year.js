@@ -3,7 +3,40 @@ modules.define('calendar-year', [
     'i-bem-dom', 'BEMHTML', 'calendar-year__years', 'calendar-month', 'input'
 ], function(provide, BEMDOM, BEMHTML, __years, CalendarMonth, Input) {
     provide(BEMDOM.declBlock(this.name, /** @lends calendar-year.prototype */{
-        _update : function(year) {
+        onSetMod : {
+            js : {
+                inited : function() {
+                    // TODO: val
+                }
+            }
+        },
+
+        _getMonthCalendars : function() {
+            return this.findChildBlocks(CalendarMonth);
+        },
+
+        _getMonthCalendarByDate : function(date) {
+            if(!date) return;
+
+            return this._getMonthCalendars().filter(function(block) {
+                return block.getDate().getFullYear() === date.getFullYear() &&
+                    block.getDate().getMonth() === date.getMonth();
+            }).get(0);
+        },
+
+        _calendarChangeHandler : function(e) {
+            this.setVal(e.target.getVal());
+
+            this._getMonthCalendars().forEach(function(block) {
+                if(block === e.target) return;
+
+                block.setVal();
+            });
+
+            this._events(CalendarMonth).once('change', this._calendarChangeHandler);
+        },
+
+        changeYear : function(year) {
             var theme = this.getMod('theme');
 
             BEMDOM.update(this.domElem, BEMHTML.apply({
@@ -11,7 +44,7 @@ modules.define('calendar-year', [
                 mods : { theme : theme },
                 elem : 'inner',
                 theme : theme,
-                date : new Date(year)
+                date : new Date(String(year))
             }));
 
             // init elem
@@ -29,21 +62,25 @@ modules.define('calendar-year', [
         setVal : function(val) {
             if(val === this._val) return;
 
-            var year = val.getFullYear(),
-                month = val.getMonth(),
-                calendars = this.findChildBlocks(CalendarMonth),
-                calendar = calendars.filter(function(block) {
-                    return block.params.year === year && block.params.month === month;
-                })[0];
+            var calendar,
+                invalidDate = val instanceof Date && isNaN(val.getTime());
 
-            if(calendar) {
-                this._val = val;
+            if(!val || invalidDate) {
+                invalidDate && console.warn('Invalid date');
 
-                calendar.getVal() !== val && calendar.setVal(val);
-            } else {
                 delete this._val;
 
-                calendars.forEach(function(block) { block.setVal(); });
+                this._getMonthCalendars().forEach(function(block) {
+                    block.setVal();
+                });
+            } else {
+                if(calendar = this._getMonthCalendarByDate(val)) {
+                    this._val = val;
+
+                    calendar.getVal() !== val && calendar.setVal(val);
+                } else {
+                    return this.changeYear(val.getFullYear()).setVal(val);
+                }
             }
 
             this._emit('change');
@@ -51,21 +88,23 @@ modules.define('calendar-year', [
             return this;
         },
 
-        _calendarChangeHandler : function(e) {
-            this.setVal(e.target.getVal());
+        scrollToVal : function(duration) {
+            var val,
+                scrollTarget;
 
-            this.findChildBlocks(CalendarMonth).forEach(function(block) {
-                if(block === e.target) return;
+            if(val = this.getVal()) {
+                scrollTarget = this.findChildElem('visible').domElem;
+                scrollTarget.stop().animate({
+                    scrollTop : this._getMonthCalendarByDate(val).domElem.position().top + scrollTarget.get(0).scrollTop
+                }, duration);
+            }
 
-                block.setVal();
-            });
-
-            this._events(CalendarMonth).once('change', this._calendarChangeHandler);
+            return this;
         }
     }, /** @lends calendar-year */{
         onInit : function() {
             this._events(__years).on('change', function(e, data) {
-                this._update(data.year);
+                this.changeYear(data.year);
 
                 // вернуть фокус в инпут после обновления блока, если ввод даты был осуществлен вручную
                 data.input && this.findChildBlock(Input).setMod('focused', true);

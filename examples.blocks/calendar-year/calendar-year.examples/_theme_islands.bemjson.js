@@ -8,12 +8,13 @@
     content : [
         {
             block : 'calendar-year',
+            mods : { theme : 'islands' },
             attrs : { style : 'margin:15px; vertical-align:top;' },
-            mods : { theme : 'islands' }
+            val : new Date()
         },
         { tag : 'br' },
         { tag : 'br' },
         { tag : 'br' },
-        { elem : 'date' }
+        { elem : 'date', tag : 'input', attrs : { type : 'date' } }
     ]
 })

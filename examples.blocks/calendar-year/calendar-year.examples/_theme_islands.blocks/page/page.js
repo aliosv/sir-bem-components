@@ -6,8 +6,22 @@ modules.define('page', ['i-bem-dom', 'calendar-year'], function(provide, BEMDOM,
                 inited : function() {
                     this.__base.apply(this, arguments);
 
+                    var _this = this;
+
                     this._events(Calendar).on('change', function(e) {
-                        this._elem('date').domElem.html(e.target.getVal().toLocaleString());
+                        var val = e.target.getVal();
+
+                        this._elem('date').domElem.val(!val ? '' : [
+                            val.getFullYear(),
+                            '0' + (val.getMonth() + 1),
+                            '0' + val.getDate()
+                        ].join('-').replace(/-0(\d\d)/, '-$1'));
+                    });
+
+                    this._domEvents('date').on('change', function(e) {
+                        _this.findChildBlock(Calendar)
+                            .setVal(new Date(e.currentTarget.value))
+                            .scrollToVal(500);
                     });
                 }
             }

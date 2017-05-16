@@ -39,14 +39,22 @@ modules.define('calendar-month', [], function(provide, Block) {
         setVal : function(date) {
             if(this._val === date) return this;
 
-            if(!this._checkRange(date)) {
-                // TODO: edit message
-                console.warn('Out of range');
+            var invalidDate = date instanceof Date && isNaN(date.getTime());
 
-                return this.setVal();
+            if(!date || invalidDate) {
+                invalidDate && console.warn('Invalid date');
+
+                delete this._val;
+            } else {
+                if(!this._checkRange(date)) {
+                    // TODO: edit message
+                    console.warn('Out of range');
+
+                    return this.setVal();
+                }
+
+                this._val = date;
             }
-
-            this._val = date;
 
             this.findChildElems({ elem : 'day', modName : 'selected', modVal : true }).delMod('selected');
             this._val && this.getDayByDate(this._val).setMod('selected', true);

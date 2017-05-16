@@ -57,8 +57,8 @@ block('calendar-year').elem('inner')(
                             elem : 'months',
                             content : calendar.map(function(month) {
                                 return {
-                                    block : 'calendar-month',
-                                    mods : { theme : this.ctx.theme },
+                                    elem : 'month',
+                                    theme : this.ctx.theme,
                                     date : month.date
                                 };
                             }, this)
