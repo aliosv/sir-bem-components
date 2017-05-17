@@ -10,7 +10,7 @@
             block : 'calendar-year',
             mods : { theme : 'islands' },
             attrs : { style : 'margin:15px; vertical-align:top;' },
-            val : new Date()
+            val : new Date((new Date()).getFullYear(), (new Date()).getMonth() + 3)
         },
         { tag : 'br' },
         { tag : 'br' },

@@ -9,7 +9,8 @@ block('calendar-year')(
             elem : 'inner',
             holidays : js.holidays,
             theme : this.ctx.mods.theme,
-            date : js.start ? new Date(js.start) : new Date()
+            date : js.start ? new Date(js.start) : new Date(),
+            val : this.ctx.val
         };
     })
 );

@@ -6,7 +6,19 @@ modules.define('calendar-year', [
         onSetMod : {
             js : {
                 inited : function() {
-                    // TODO: val
+                    var _this = this;
+
+                    // Поиск предустановленного значения
+                    this._getMonthCalendars().some(function(block) {
+                        var val = block.getVal();
+
+                        if(val) {
+                            _this._val = val;
+                            _this.scrollToVal();
+
+                            return true;
+                        }
+                    });
                 }
             }
         },
@@ -96,7 +108,7 @@ modules.define('calendar-year', [
                 scrollTarget = this.findChildElem('visible').domElem;
                 scrollTarget.stop().animate({
                     scrollTop : this._getMonthCalendarByDate(val).domElem.position().top + scrollTarget.get(0).scrollTop
-                }, duration);
+                }, duration || 0);
             }
 
             return this;

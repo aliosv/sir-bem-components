@@ -59,7 +59,8 @@ block('calendar-year').elem('inner')(
                                 return {
                                     elem : 'month',
                                     theme : this.ctx.theme,
-                                    date : month.date
+                                    date : month.date,
+                                    val : this.ctx.val
                                 };
                             }, this)
                         }

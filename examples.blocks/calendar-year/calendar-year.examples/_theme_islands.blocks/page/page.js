@@ -6,16 +6,19 @@ modules.define('page', ['i-bem-dom', 'calendar-year'], function(provide, BEMDOM,
                 inited : function() {
                     this.__base.apply(this, arguments);
 
-                    var _this = this;
+                    var _this = this,
+                        updateInput = function(date) {
+                            this._elem('date').domElem.val(!date ? '' : [
+                                date.getFullYear(),
+                                '0' + (date.getMonth() + 1),
+                                '0' + date.getDate()
+                            ].join('-').replace(/-0(\d\d)/g, '-$1'));
+                        }.bind(this);
+
+                    updateInput(this.findChildBlock(Calendar).getVal());
 
                     this._events(Calendar).on('change', function(e) {
-                        var val = e.target.getVal();
-
-                        this._elem('date').domElem.val(!val ? '' : [
-                            val.getFullYear(),
-                            '0' + (val.getMonth() + 1),
-                            '0' + val.getDate()
-                        ].join('-').replace(/-0(\d\d)/, '-$1'));
+                        updateInput(e.target.getVal());
                     });
 
                     this._domEvents('date').on('change', function(e) {
