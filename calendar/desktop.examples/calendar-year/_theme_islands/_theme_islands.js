@@ -2159,7 +2159,8 @@ block('calendar-year')(
             elem : 'inner',
             holidays : js.holidays,
             theme : this.ctx.mods.theme,
-            date : js.start ? new Date(js.start) : new Date()
+            date : js.start ? new Date(js.start) : new Date(),
+            val : this.ctx.val
         };
     })
 );
@@ -2227,7 +2228,8 @@ block('calendar-year').elem('inner')(
                                 return {
                                     elem : 'month',
                                     theme : this.ctx.theme,
-                                    date : month.date
+                                    date : month.date,
+                                    val : this.ctx.val
                                 };
                             }, this)
                         }
@@ -2333,8 +2335,8 @@ block('calendar-year').elem('month').def()(function() {
         block : 'calendar-month',
         mods : { selectable : 'single', theme : this.ctx.theme },
         js : { date : this.ctx.date },
-        mix : { block : 'calendar-year', elem : 'month' }
-        // TODO: val
+        mix : { block : 'calendar-year', elem : 'month' },
+        val : this.ctx.val
     });
 });
 
