@@ -72,7 +72,7 @@ modules.define('calendar-year', [
         },
 
         setVal : function(val) {
-            if(val === this._val) return;
+            if(val === this._val) return this;
 
             var calendar,
                 invalidDate = val instanceof Date && isNaN(val.getTime());
