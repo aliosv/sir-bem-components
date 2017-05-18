@@ -2150,7 +2150,7 @@ assert.equal = function assertEqual(l, r, msg) {
 /// --------- BEM-XJST Runtime End ------
 /// -------------------------------------
 
-var api = new BEMHTML({});
+var api = new BEMHTML({"elemJsInstances":true});
 /// -------------------------------------
 /// ------ BEM-XJST User-code Start -----
 /// -------------------------------------
