@@ -123,6 +123,7 @@ function configureJs(nodeConfig, params, freeze) {
             [bemhtml, {
                 target : '?.client.bemhtml.js',
                 filesTarget : '?.bemhtmlFromJs.files',
+                engineOptions : { elemJsInstances : true },
                 devMode : false
             }],
             [mergeFiles, {
