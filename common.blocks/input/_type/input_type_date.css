@@ -1,32 +1,3 @@
-.input_type_date .input__box:before {
-    content: '';
-    position: absolute;
-    right: 7px;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-    width: 15px;
-    height: 15px;
-    background: url(input_type_date.svg) 50% 50% no-repeat;
-    background-size: auto 100%;
-}
-
-.input_type_date .input__box .input__control {
-    padding-right: 25px;
-}
-
-.input-date__popup.popup {
-    display: flex !important;
-    flex-wrap: wrap;
-    width: 224px;
-    justify-content: space-between;
-    padding: 15px;
-}
-
-.input-date__popup > .input {
-    width: 80px;
-}
-
-.input-date__popup .calendar {
-    margin-top: 20px;
+.input-date__popup .calendar-year {
+    vertical-align: top;
 }

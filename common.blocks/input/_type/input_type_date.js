@@ -1,7 +1,7 @@
 /** @class input */
 modules.define('input', [
-    'i-bem-dom', 'BEMHTML', 'popup', 'calendar-month', 'jquery__inputmask'
-], function(provide, BEMDOM, BEMHTML, Popup, Calendar, $, Block) {
+    'i-bem-dom', 'BEMHTML', 'popup', 'jquery__inputmask', 'calendar-year'
+], function(provide, BEMDOM, BEMHTML, Popup, $, Calendar, Block) {
     provide(Block.declMod({ modName : 'type', modVal : 'date' }, /** @lends input.prototype */{
         onSetMod : {
             js : {
@@ -10,12 +10,15 @@ modules.define('input', [
                         theme = this.getMod('theme');
 
                     function getDate() {
-                        var date = _this.getVal().split('.').reverse(),
-                            year = date[0],
-                            month = date[1] - 1,
-                            day = date[2];
+                        if(!_this.getVal()) return;
 
-                        return new Date(year, month, day);
+                        var val = _this.getVal().split('.').reverse(),
+                            year = val[0],
+                            month = val[1] - 1,
+                            day = val[2],
+                            date = new Date(year, month, day);
+
+                        return isNaN(date.getTime()) ? undefined : date;
                     }
 
                     this._elem('control').domElem.inputmask({
@@ -28,64 +31,38 @@ modules.define('input', [
                         _this.domElem.click();
                     });
 
-                    try {
-                        this._date = getDate();
-                        this._date.toISOString();
-                    } catch(e) {
-                        this._date = new Date();
-                    }
-
                     this._popup = BEMDOM.init(BEMHTML.apply({
                         block : 'popup',
                         mods : { autoclosable : true, target : 'anchor', theme : 'islands' },
                         mix : { block : 'input-date', elem : 'popup', elemMods : { theme : theme } },
                         directions : this.params.directions,
-                        content : [
-                            {
-                                block : 'input',
-                                mods : { size : 'l', theme : theme, month : true }
-                            },
-                            {
-                                block : 'input',
-                                mods : { size : 'l', theme : theme, year : true }
-                            }
-                        ]
+                        content : {
+                            block : 'calendar-year',
+                            mods : { theme : 'islands' },
+                            val : getDate()
+                        }
                     })).bem(Popup);
+                    BEMDOM.append($(document.body), this._popup.domElem);
                     this._popup.setAnchor(this);
 
-                    this._month = this._popup.findChildBlocks(Block).get(0);
-                    this._year = this._popup.findChildBlocks(Block).get(1);
-
-                    this._update();
-
-                    this._popup._events(Calendar).on('change', function(e) {
-                        _this._date = e.target.getVal();
-                        _this.setVal(_this._date, { guard : true });
-                    });
-
-                    this._popup._events(Block).on('change', function(e) {
-                        if(e.target.hasMod('month')) {
-                            e.target.getVal().length && _this._date.setMonth(e.target.getVal() - 1);
-                        } else if(e.target.hasMod('year')) {
-                            e.target.getVal().length === 4 && _this._date.setFullYear(e.target.getVal());
-                        }
-
-                        _this._updateCalendar();
-                        _this.setVal(_this._date, { guard : true });
-                    });
-
-                    this._events().on('change', function(e, data) {
+                    _this._popup._events(Calendar).on('change', function(e, data) {
                         if(data && data.guard) return;
 
-                        var date;
+                        var date = e.target.getVal();
 
-                        try {
-                            date = getDate();
-                            date.toISOString();
+                        _this.setVal(date ? [
+                            ('0' + date.getDate()).slice(-2),
+                            ('0' + (date.getMonth() + 1)).slice(-2),
+                            date.getFullYear()
+                        ].join('.') : date, { guard : true });
+                    });
 
-                            _this._date = date;
-                            _this._update();
-                        } catch(e) {}
+                    _this._events().on('change', function(e, data) {
+                        if(data && data.guard) return;
+
+                        _this._popup.findChildBlock(Calendar)
+                            .setVal(getDate(), { guard : true })
+                            .scrollToVal(300);
                     });
 
                     this.__base.apply(this, arguments);
@@ -93,47 +70,13 @@ modules.define('input', [
             },
 
             focused : function(modName, modVal) {
-                modVal && this._popup.setMod('visible', true);
+                if(modVal) {
+                    this._popup.setMod('visible', true);
+                    // при инициализации попап скрыт и нужные размеры в календаре считаются неверно, принудительно
+                    // пересчитать
+                    this._popup.findChildBlock(Calendar).update();
+                }
             }
-        },
-
-        _update : function() {
-            this._month.setVal(this._date.getMonth() + 1);
-            this._year.setVal(this._date.getFullYear());
-            this._updateCalendar();
-        },
-
-        _updateCalendar : function() {
-            var calendar = BEMDOM.init(BEMHTML.apply({
-                block : 'calendar-month',
-                js : { date : this._date.toISOString() },
-                mods : { theme : 'islands' }
-            })).bem(Calendar);
-
-            if(this._calendar) {
-                BEMDOM.replace(this._calendar.domElem, calendar.domElem);
-            } else {
-                BEMDOM.append(this._popup.domElem, calendar.domElem);
-            }
-
-            this._calendar = calendar;
-            this._calendar.setVal(this._date);
-        },
-
-        setVal : function(val, data) {
-            var date;
-
-            try {
-                date = val instanceof Date ? val : new Date(val.split('.').length === 3 ?
-                    val.split('.').reverse().join('-') : val);
-                date.toISOString();
-
-                return this.__base([
-                    ('0' + date.getDate()).slice(-2),
-                    ('0' + (date.getMonth() + 1)).slice(-2),
-                    date.getFullYear()
-                ].join('.'), data);
-            } catch(e) {}
         }
     }));
 });

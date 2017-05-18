@@ -1,7 +1,7 @@
 /** @class calendar-year */
 modules.define('calendar-year', [
-    'i-bem-dom', 'BEMHTML', 'calendar-year__years', 'calendar-month', 'input'
-], function(provide, BEMDOM, BEMHTML, __years, CalendarMonth, Input) {
+    'i-bem-dom', 'BEMHTML', 'calendar-year__inner', 'calendar-year__years', 'calendar-month'
+], function(provide, BEMDOM, BEMHTML, __inner, __years, CalendarMonth) {
     provide(BEMDOM.declBlock(this.name, /** @lends calendar-year.prototype */{
         onSetMod : {
             js : {
@@ -71,7 +71,7 @@ modules.define('calendar-year', [
             return this._val;
         },
 
-        setVal : function(val) {
+        setVal : function(val, data) {
             if(val === this._val) return this;
 
             var calendar,
@@ -95,7 +95,7 @@ modules.define('calendar-year', [
                 }
             }
 
-            this._emit('change');
+            this._emit('change', data);
 
             return this;
         },
@@ -112,14 +112,24 @@ modules.define('calendar-year', [
             }
 
             return this;
+        },
+
+        update : function() {
+            this.findChildElem(__inner).update();
+
+            return this;
         }
     }, /** @lends calendar-year */{
         onInit : function() {
             this._events(__years).on('change', function(e, data) {
+                var _this = this;
+
                 this.changeYear(data.year);
 
-                // вернуть фокус в инпут после обновления блока, если ввод даты был осуществлен вручную
-                data.input && this.findChildBlock(Input).setMod('focused', true);
+                modules.require(['input'], function(Input) {
+                    // вернуть фокус в инпут после обновления блока, если ввод даты был осуществлен вручную
+                    data.input && _this.findChildBlock(Input).setMod('focused', true);
+                });
             });
 
             this._events(CalendarMonth).once('change', this.prototype._calendarChangeHandler);

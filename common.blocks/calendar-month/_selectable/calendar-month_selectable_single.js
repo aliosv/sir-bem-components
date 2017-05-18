@@ -36,7 +36,7 @@ modules.define('calendar-month', [], function(provide, Block) {
             return this._val;
         },
 
-        setVal : function(date) {
+        setVal : function(date, data) {
             if(this._val === date) return this;
 
             var invalidDate = date instanceof Date && isNaN(date.getTime());
@@ -59,7 +59,7 @@ modules.define('calendar-month', [], function(provide, Block) {
             this.findChildElems({ elem : 'day', modName : 'selected', modVal : true }).delMod('selected');
             this._val && this.getDayByDate(this._val).setMod('selected', true);
 
-            this._emit('change');
+            this._emit('change', data);
 
             return this;
         }
