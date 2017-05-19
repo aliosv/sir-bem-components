@@ -1,0 +1,9 @@
+@import "../../../node_modules/bem-components/design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/page/_theme/page_theme_islands.css";
+@import "../../../design/common.blocks/i-font/_ubuntu/i-font_ubuntu.css";
+@import "../../../common.blocks/calendar-month/calendar-month.css";
+@import "../../../common.blocks/calendar-month/__day/calendar-month__day.css";
+@import "../../../common.blocks/calendar-month/__day-names/calendar-month__day-names.css";
+@import "../../../common.blocks/calendar-month/_mark-past-days/calendar-month_mark-past-days.css";
+@import "../../../common.blocks/calendar-month/_selectable/calendar-month_selectable.css";
+@import "_theme_islands.blocks/calendar-month/_friday/calendar-month_friday.css";

@@ -19,7 +19,15 @@
 /*borschik:include:../../../node_modules/bem-core/common.blocks/i-bem-dom/__events/_type/i-bem-dom__events_type_dom.js*/
 /*borschik:include:../../../node_modules/bem-core/common.blocks/i-bem-dom/__events/_type/i-bem-dom__events_type_bem.js*/
 /*borschik:include:../../../node_modules/bem-core/common.blocks/events/events.vanilla.js*/
+/*borschik:include:./_theme_islands.blocks/page/page.js*/
 /*borschik:include:../../../node_modules/bem-core/common.blocks/i-bem-dom/__init/_auto/i-bem-dom__init_auto.js*/
+/*borschik:include:../../../common.blocks/calendar-year/calendar-year.js*/
+/*borschik:include:../../../common.blocks/calendar-year/__inner/calendar-year__inner.js*/
+/*borschik:include:../../../common.blocks/mini-map/mini-map.browser.js*/
+/*borschik:include:../../../common.blocks/calendar-month/calendar-month.js*/
+/*borschik:include:../../../common.blocks/calendar-month/__day/calendar-month__day.js*/
+/*borschik:include:../../../common.blocks/calendar-month/_selectable/calendar-month_selectable_single.js*/
+/*borschik:include:../../../common.blocks/calendar-year/__years/calendar-year__years.js*/
 /*borschik:include:../../../node_modules/bem-components/common.blocks/input/input.js*/
 /*borschik:include:../../../node_modules/bem-components/desktop.blocks/input/input.js*/
 /*borschik:include:../../../node_modules/bem-components/common.blocks/control/control.js*/
@@ -29,22 +37,6 @@
 /*borschik:include:../../../node_modules/bem-core/common.blocks/jquery/__event/_type/jquery__event_type_pointerpressrelease.js*/
 /*borschik:include:../../../node_modules/bem-core/common.blocks/tick/tick.vanilla.js*/
 /*borschik:include:../../../node_modules/bem-core/common.blocks/idle/idle.js*/
-/*borschik:include:../../../common.blocks/autocomplete/autocomplete.vanilla.js*/
-/*borschik:include:../../../common.blocks/autocomplete/autocomplete.js*/
-/*borschik:include:../../../common.blocks/autocomplete/__message/autocomplete__message.js*/
-/*borschik:include:../../../node_modules/bem-components/common.blocks/textarea/textarea.js*/
-/*borschik:include:../../../node_modules/bem-core/common.blocks/vow/vow.vanilla.js*/
-/*borschik:include:../../../node_modules/bem-core/common.blocks/functions/__debounce/functions__debounce.vanilla.js*/
-/*borschik:include:../../../node_modules/bem-components/common.blocks/menu/menu.js*/
-/*borschik:include:../../../node_modules/bem-core/common.blocks/keyboard/__codes/keyboard__codes.js*/
-/*borschik:include:../../../node_modules/bem-components/common.blocks/menu/__item/menu__item.js*/
-/*borschik:include:../../../node_modules/bem-components/common.blocks/popup/popup.js*/
-/*borschik:include:../../../node_modules/bem-core/common.blocks/functions/__throttle/functions__throttle.vanilla.js*/
-/*borschik:include:../../../node_modules/bem-components/common.blocks/popup/_target/popup_target.js*/
-/*borschik:include:../../../node_modules/bem-components/common.blocks/popup/_target/popup_target_anchor.js*/
-/*borschik:include:../../../node_modules/bem-components/common.blocks/z-index-group/z-index-group.js*/
-/*borschik:include:../../../node_modules/bem-components/design/common.blocks/popup/_theme/popup_theme_islands.js*/
-/*borschik:include:../../../node_modules/bem-components/common.blocks/spin/spin.js*/
 var BEMHTML;
 
 (function(global) {
@@ -2155,6 +2147,256 @@ var api = new BEMHTML({"elemJsInstances":true});
 /// ------ BEM-XJST User-code Start -----
 /// -------------------------------------
 api.compile(function(match, wrap, block, elem, mode, mod, elemMod, def, tag, attrs, cls, js, bem, mix, content, replace, extend, oninit, xjstOptions, appendContent, prependContent, local, applyCtx, applyNext, apply) {
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/calendar-year.bemhtml.js */
+block('calendar-year')(
+    // TODO: live init
+    js()({ lazyInit : false }),
+
+    content()(function() {
+        var js = this.ctx.js || {};
+
+        return {
+            elem : 'inner',
+            holidays : js.holidays,
+            theme : this.ctx.mods.theme,
+            date : js.start ? new Date(js.start) : new Date(),
+            val : this.ctx.val
+        };
+    })
+);
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/calendar-year.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/__inner/calendar-year__inner.bemhtml.js */
+block('calendar-year').elem('inner')(
+    js()(true),
+
+    content()(function() {
+        var _months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                'Октябрь', 'Ноябрь', 'Декабрь'],
+            date = this.ctx.date,
+        // 0-11
+            monthIndex = date.getMonth(),
+            year = date.getFullYear(),
+        // данные календаря
+            calendar = _months.slice(monthIndex)
+                .concat(_months.slice(0, monthIndex))
+                .map(function(value, index) {
+                    var date = new Date(
+                        Number(year) + Math.floor((index + monthIndex) / 12),
+                        (index + monthIndex) % 12
+                    );
+
+                    return {
+                        caption : value,
+                        date : date
+                    };
+                });
+
+        return [
+            {
+                elem : 'years',
+                targetYear : year
+            },
+            {
+                elem : 'list',
+                mix : { block : 'mini-map', js : { scrollStepY : 0.015 } },
+                content : [
+                    { block : 'mini-map', elem : 'thumb' },
+                    calendar.map(function(month, index) {
+                        return {
+                            elem : 'item',
+                            // отображать год, если текущий месяц не январь
+                            content : index > 0 && month.date.getMonth() === 0 ?
+                                [
+                                    month.caption,
+                                    { elem : 'year', content : year + 1 }
+                                ] :
+                                month.caption
+                        };
+                    })
+                ]
+            },
+            {
+                elem : 'dates',
+                content : [
+                    { block : 'calendar-month', elem : 'day-names' },
+                    {
+                        elem : 'visible',
+                        content : {
+                            elem : 'months',
+                            content : calendar.map(function(month) {
+                                return {
+                                    elem : 'month',
+                                    theme : this.ctx.theme,
+                                    date : month.date,
+                                    val : this.ctx.val
+                                };
+                            }, this)
+                        }
+                    }
+                ]
+            }
+        ];
+    })
+);
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/__inner/calendar-year__inner.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/mini-map/mini-map.bemhtml.js */
+block('mini-map')(
+    content()({ elem : 'thumb' }),
+    js()(true)
+);
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/mini-map/mini-map.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/calendar-month.bemhtml.js */
+block('calendar-month')(
+    js()(true),
+
+    match(function() {
+        return !this.ctx.js || !this.ctx.js.hasOwnProperty('date');
+    }).def()(function() {
+        return applyCtx(this.extend(this.ctx, {
+            js : this.extend(this.ctx.js, {
+                date : new Date()
+            })
+        }));
+    }),
+
+    content()(function() {
+        var _months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь',
+            'Ноябрь', 'Декабрь'],
+
+            date = this.ctx.js.date,
+            targetYear = date.getFullYear(),
+            // индекс месяца в году (0-11)
+            targetMonth = date.getMonth(),
+            targetMonthDate = new Date(targetYear, targetMonth),
+        // кол-во дней в месяце (1-31)
+            nDays = new Date(targetYear, targetMonth + 1, 0).getDate(),
+        // индекс первого дня месяца в неделе (0(monday) - 6(sunday))
+            firstDayIndex = (targetMonthDate.getDay() || 7) - 1;
+
+        return [
+            { elem : 'day-names' },
+            {
+                elem : 'month-name',
+                elemMods : {
+                    startDay : firstDayIndex !== 0 ?
+                    firstDayIndex + 1 :
+                        undefined
+                },
+                content : _months[targetMonth]
+            },
+            (new Array(nDays)).join(' ').split(' ').map(function(v, i) {
+                return {
+                    elem : 'day',
+                    elemMods : {
+                        weekend : [5, 6].indexOf((firstDayIndex + i) % 7) > -1 ? true : undefined
+                    },
+                    calendarCtx : this.ctx,
+                    calendarDate : date,
+                    dayIndex : i + 1
+                };
+            }, this)
+        ];
+    })
+);
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/calendar-month.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/__day/calendar-month__day.bemhtml.js */
+block('calendar-month').elem('day')(
+    js()(true),
+
+    // TODO: WTF??? get rid of this
+    def()(function() {
+        return applyNext(this.ctx);
+    }),
+
+    content()(function() {
+        return this.ctx.dayIndex;
+    })
+);
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/__day/calendar-month__day.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/__day-names/calendar-month__day-names.bemhtml.js */
+block('calendar-month').elem('day-names').content()(function() {
+    return ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'].map(function(dayCaption, index) {
+        return {
+            elem : 'day-name', elemMods : { weekend : index > 4 || undefined },
+            content : dayCaption
+        };
+    });
+});
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/__day-names/calendar-month__day-names.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/__month/calendar-year__month.bemhtml.js */
+block('calendar-year').elem('month').def()(function() {
+    return applyCtx({
+        block : 'calendar-month',
+        mods : { selectable : 'single', theme : this.ctx.theme },
+        js : { date : this.ctx.date },
+        mix : { block : 'calendar-year', elem : 'month' },
+        val : this.ctx.val
+    });
+});
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/__month/calendar-year__month.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/_selectable/calendar-month_selectable_single.bemhtml.js */
+block('calendar-month').mod('selectable', 'single')(
+    // Удалить val из контекста, если оно вне границ текущего месяца
+    match(function() {
+        var val = this.ctx.val,
+            date = this.ctx.js.date;
+
+        return val && (val.getFullYear() !== date.getFullYear() || val.getMonth() !== date.getMonth());
+    }).def()(function() {
+        return applyCtx(this.extend(this.ctx, { val : undefined }));
+    }),
+
+    match(function() {
+        return this.ctx.calendarCtx.val;
+    }).elem('day')
+        // TODO: why i can't use elemMods here?
+        .def()(function() {
+        return applyNext({
+            ctx : this.extend(this.ctx, {
+                elemMods : this.extend(this.ctx.elemMods, {
+                    selected : this.ctx.calendarCtx.val.getDate() === this.ctx.dayIndex
+                })
+            })
+        });
+    })
+);
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-month/_selectable/calendar-month_selectable_single.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/__years/calendar-year__years.bemhtml.js */
+block('calendar-year')(
+    elem('years')(
+        js()(true),
+
+        content()(function() {
+            var targetYear = Number(this.ctx.targetYear);
+
+            return [
+                { elem : 'years-toggle', content : targetYear - 2 },
+                { elem : 'years-toggle', content : targetYear - 1 },
+                {
+                    block : 'input',
+                    mods : { size : 'm', theme : 'islands' },
+                    val : targetYear,
+                    placeholder : 'Год',
+                    maxLength : 4
+                },
+                { elem : 'years-toggle', content : targetYear + 1 },
+                { elem : 'years-toggle', content : targetYear + 2 }
+            ];
+        })
+    ),
+
+    elem('years-toggle').attrs()({ title : 'Установить год' })
+);
+
+/* end: /home/travis/build/aliosv/sir-bem-components/common.blocks/calendar-year/__years/calendar-year__years.bemhtml.js */
 /* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-core/common.blocks/ua/ua.bemhtml.js */
 block('ua')(
     tag()('script'),
@@ -2167,150 +2409,44 @@ block('ua')(
 );
 
 /* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-core/common.blocks/ua/ua.bemhtml.js */
-/* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/menu/menu.bemhtml.js */
-block('menu')(
-    def()(function() {
-        var ctx = this.ctx,
-            mods = this.mods,
-            firstItem,
-            checkedItems = [];
-
-        if(ctx.content) {
-            var isValDef = typeof ctx.val !== 'undefined',
-                containsVal = function(val) {
-                    return isValDef &&
-                        (mods.mode === 'check'?
-                            ctx.val.indexOf(val) > -1 :
-                            ctx.val === val);
-                },
-                iterateItems = function(content) {
-                    var i = 0, itemOrGroup;
-                    while(itemOrGroup = content[i++]) {
-                        if(itemOrGroup.elem === 'item') {
-                            firstItem || (firstItem = itemOrGroup);
-                            if(containsVal(itemOrGroup.val)) {
-                                (itemOrGroup.elemMods = itemOrGroup.elemMods || {}).checked = true;
-                                checkedItems.push(itemOrGroup);
-                            }
-                        } else if(itemOrGroup.content) { // menu__group
-                            iterateItems(itemOrGroup.content);
-                        }
-                    }
-                };
-
-            if(!Array.isArray(ctx.content)) throw Error('menu: content must be an array of the menu items');
-
-            iterateItems(ctx.content);
-        }
-
-        return applyNext({
-            _firstItem : firstItem,
-            _checkedItems : checkedItems,
-            _menuMods : mods
-        });
-    }),
-    attrs()(function() {
-        var attrs = { role : 'menu' };
-
-        this.mods.disabled?
-            attrs['aria-disabled'] = 'true' :
-            attrs.tabindex = 0;
-
-        return attrs;
-    }),
+/* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/input/input.bemhtml.js */
+block('input')(
+    tag()('span'),
     js()(true),
-    mix()({ elem : 'control' }),
-    mod('disabled', true)
-        .js()(function() {
-            return this.extend(applyNext(), { tabIndex : 0 });
-        })
+    def()(function() {
+        return applyNext({ _input : this.ctx });
+    }),
+    content()({ elem : 'box', content : { elem : 'control' } })
 );
 
-/* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/menu/menu.bemhtml.js */
-/* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/menu/_focused/menu_focused.bemhtml.js */
-block('menu').mod('focused', true).js()(function() {
-    return this.extend(applyNext(), { lazyInit : false });
-});
+/* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/input/input.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/input/__box/input__box.bemhtml.js */
+block('input').elem('box').tag()('span');
 
-/* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/menu/_focused/menu_focused.bemhtml.js */
-/* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/menu/__item/menu__item.bemhtml.js */
-block('menu').elem('item')(
-    def().match(function() { return this._menuMods; })(function() {
-        var elemMods = this.elemMods;
-        elemMods.theme = elemMods.theme || this._menuMods.theme;
-        elemMods.disabled = elemMods.disabled || this._menuMods.disabled;
-        return applyNext();
-    }),
-    js()(function() {
-        return { val : this.ctx.val };
-    }),
-    attrs()(function(){
-        var elemMods = this.elemMods,
-            menuMode = this._menuMods && this._menuMods.mode,
-            role = menuMode?
-                        (menuMode === 'check'? 'menuitemcheckbox' : 'menuitemradio') :
-                        'menuitem',
+/* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/input/__box/input__box.bemhtml.js */
+/* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/input/__control/input__control.bemhtml.js */
+block('input').elem('control')(
+    tag()('input'),
+
+    attrs()(function() {
+        var input = this._input,
             attrs = {
-                role : role,
-                id : this.ctx.id || this.generateId(),
-                'aria-disabled' : elemMods.disabled && 'true',
-                'aria-checked' : menuMode && String(!!elemMods.checked)
+                id : input.id,
+                name : input.name,
+                value : input.val,
+                maxlength : input.maxLength,
+                tabindex : input.tabIndex,
+                placeholder : input.placeholder
             };
+
+        input.autocomplete === false && (attrs.autocomplete = 'off');
+        this.mods.disabled && (attrs.disabled = 'disabled');
 
         return attrs;
     })
 );
 
-/* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/menu/__item/menu__item.bemhtml.js */
-/* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/menu/__group/menu__group.bemhtml.js */
-block('menu').elem('group')(
-    attrs()({ role : 'group' }),
-    match(function() { return typeof this.ctx.title !== 'undefined'; })(
-        attrs()(function() {
-            return this.extend(applyNext(), {
-                'aria-label' : undefined,
-                'aria-labelledby' : this.generateId()
-            });
-        }),
-        content()(function() {
-            return [
-                {
-                    elem : 'group-title',
-                    attrs : {
-                        role : 'presentation',
-                        id : this.generateId()
-                    },
-                    content : this.ctx.title
-                },
-                applyNext()
-            ];
-        })
-    )
-);
-
-/* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/menu/__group/menu__group.bemhtml.js */
-/* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/popup/popup.bemhtml.js */
-block('popup')(
-    js()(function() {
-        var ctx = this.ctx;
-        return {
-            mainOffset : ctx.mainOffset,
-            secondaryOffset : ctx.secondaryOffset,
-            viewportOffset : ctx.viewportOffset,
-            directions : ctx.directions,
-            zIndexGroupLevel : ctx.zIndexGroupLevel
-        };
-    }),
-    attrs()({ 'aria-hidden' : 'true' })
-);
-
-/* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/popup/popup.bemhtml.js */
-/* begin: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/spin/spin.bemhtml.js */
-block('spin')(
-    tag()('span')
-);
-
-/* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/spin/spin.bemhtml.js */
+/* end: /home/travis/build/aliosv/sir-bem-components/node_modules/bem-components/common.blocks/input/__control/input__control.bemhtml.js */
 oninit(function(exports, context) {
     var BEMContext = exports.BEMContext || context.BEMContext;
     // Provides third-party libraries from different modular systems
