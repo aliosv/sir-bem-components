@@ -1,7 +1,7 @@
 /** @class input */
 modules.define('input', [
-    'i-bem-dom', 'BEMHTML', 'popup', 'jquery__inputmask', 'calendar-year'
-], function(provide, BEMDOM, BEMHTML, Popup, $, Calendar, Block) {
+    'i-bem-dom', 'BEMHTML', 'popup', 'jquery__inputmask'
+], function(provide, BEMDOM, BEMHTML, Popup, $, Block) {
     provide(Block.declMod({ modName : 'type', modVal : 'date' }, /** @lends input.prototype */{
         onSetMod : {
             js : {
@@ -45,24 +45,29 @@ modules.define('input', [
                     BEMDOM.append($(document.body), this._popup.domElem);
                     this._popup.setAnchor(this);
 
-                    _this._popup._events(Calendar).on('change', function(e, data) {
-                        if(data && data.guard) return;
+                    // resolve circular dependency of input
+                    modules.require(['calendar-year'], function(Calendar) {
+                        _this._calendar = _this._popup.findChildBlock(Calendar);
 
-                        var date = e.target.getVal();
+                        _this._calendar._events().on('change', function(e, data) {
+                            if(data && data.guard) return;
 
-                        _this.setVal(date ? [
-                            ('0' + date.getDate()).slice(-2),
-                            ('0' + (date.getMonth() + 1)).slice(-2),
-                            date.getFullYear()
-                        ].join('.') : date, { guard : true });
-                    });
+                            var date = e.target.getVal();
 
-                    _this._events().on('change', function(e, data) {
-                        if(data && data.guard) return;
+                            _this.setVal(date ? [
+                                ('0' + date.getDate()).slice(-2),
+                                ('0' + (date.getMonth() + 1)).slice(-2),
+                                date.getFullYear()
+                            ].join('.') : date, { guard : true });
+                        });
 
-                        _this._popup.findChildBlock(Calendar)
-                            .setVal(getDate(), { guard : true })
-                            .scrollToVal(300);
+                        _this._events().on('change', function(e, data) {
+                            if(data && data.guard) return;
+
+                            _this._calendar
+                                .setVal(getDate(), { guard : true })
+                                .scrollToVal(300);
+                        });
                     });
 
                     this.__base.apply(this, arguments);
@@ -74,7 +79,7 @@ modules.define('input', [
                     this._popup.setMod('visible', true);
                     // при инициализации попап скрыт и нужные размеры в календаре считаются неверно, принудительно
                     // пересчитать
-                    this._popup.findChildBlock(Calendar).update();
+                    this._calendar && this._calendar.update().scrollToVal();
                 }
             }
         }

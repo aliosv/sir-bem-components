@@ -1,20 +1,15 @@
 /** @class calendar-year */
-modules.define('calendar-year__years', ['i-bem-dom'], function(provide, BEMDOM) {
+modules.define('calendar-year__years', ['i-bem-dom', 'input'], function(provide, BEMDOM, Input) {
     provide(BEMDOM.declElem('calendar-year', 'years', /** @lends calendar-year.prototype */{
         onSetMod : {
             js : {
                 inited : function() {
-                    var _this = this;
+                    this._events(Input).on('change', function(e) {
+                        var year = e.target.getVal();
 
-                    // getting rid of circular dependancy, when "input" use thi block(input_type_date)
-                    modules.require(['input'], function(Input) {
-                        _this._events(Input).on('change', function(e) {
-                            var year = e.target.getVal();
+                        if(year.length !== 4) return;
 
-                            if(year.length !== 4) return;
-
-                            _this._emit('change', { year : year, input : true });
-                        });
+                        this._emit('change', { year : year, input : true });
                     });
                 }
             }

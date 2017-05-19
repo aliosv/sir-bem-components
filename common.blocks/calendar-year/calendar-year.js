@@ -1,7 +1,7 @@
 /** @class calendar-year */
 modules.define('calendar-year', [
-    'i-bem-dom', 'BEMHTML', 'calendar-year__inner', 'calendar-year__years', 'calendar-month'
-], function(provide, BEMDOM, BEMHTML, __inner, __years, CalendarMonth) {
+    'i-bem-dom', 'BEMHTML', 'calendar-year__inner', 'calendar-year__years', 'calendar-month', 'input'
+], function(provide, BEMDOM, BEMHTML, __inner, __years, CalendarMonth, Input) {
     provide(BEMDOM.declBlock(this.name, /** @lends calendar-year.prototype */{
         onSetMod : {
             js : {
@@ -126,10 +126,8 @@ modules.define('calendar-year', [
 
                 this.changeYear(data.year);
 
-                modules.require(['input'], function(Input) {
-                    // вернуть фокус в инпут после обновления блока, если ввод даты был осуществлен вручную
-                    data.input && _this.findChildBlock(Input).setMod('focused', true);
-                });
+                // вернуть фокус в инпут после обновления блока, если ввод даты был осуществлен вручную
+                data.input && _this.findChildBlock(Input).setMod('focused', true);
             });
 
             this._events(CalendarMonth).once('change', this.prototype._calendarChangeHandler);
