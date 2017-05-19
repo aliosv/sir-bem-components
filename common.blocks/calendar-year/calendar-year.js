@@ -19,6 +19,8 @@ modules.define('calendar-year', [
                             return true;
                         }
                     });
+
+                    this._events(CalendarMonth).once('change', this._calendarChangeHandler);
                 }
             }
         },
@@ -129,8 +131,6 @@ modules.define('calendar-year', [
                 // вернуть фокус в инпут после обновления блока, если ввод даты был осуществлен вручную
                 data.input && _this.findChildBlock(Input).setMod('focused', true);
             });
-
-            this._events(CalendarMonth).once('change', this.prototype._calendarChangeHandler);
         }
     }));
 });
