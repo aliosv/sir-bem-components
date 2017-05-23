@@ -6,20 +6,7 @@ modules.define('input', [
         onSetMod : {
             js : {
                 inited : function() {
-                    var _this = this,
-                        theme = this.getMod('theme');
-
-                    function getDate() {
-                        if(!_this.getVal()) return;
-
-                        var val = _this.getVal().split('.').reverse(),
-                            year = val[0],
-                            month = val[1] - 1,
-                            day = val[2],
-                            date = new Date(year, month, day);
-
-                        return isNaN(date.getTime()) ? undefined : date;
-                    }
+                    var _this = this;
 
                     this._elem('control').domElem.inputmask({
                         alias : 'dd.mm.yyyy'
@@ -31,19 +18,7 @@ modules.define('input', [
                         _this.domElem.click();
                     });
 
-                    this._popup = BEMDOM.init(BEMHTML.apply({
-                        block : 'popup',
-                        mods : { autoclosable : true, target : 'anchor', theme : 'islands' },
-                        mix : { block : 'input-date', elem : 'popup', elemMods : { theme : theme } },
-                        directions : this.params.directions,
-                        content : {
-                            block : 'calendar-year',
-                            mods : { theme : 'islands' },
-                            val : getDate()
-                        }
-                    })).bem(Popup);
-                    BEMDOM.append($(document.body), this._popup.domElem);
-                    this._popup.setAnchor(this);
+                    this._initPopup();
 
                     // resolve circular dependency of input
                     modules.require(['calendar-year'], function(Calendar) {
@@ -65,7 +40,7 @@ modules.define('input', [
                             if(data && data.guard) return;
 
                             _this._calendar
-                                .setVal(getDate(), { guard : true })
+                                .setVal(_this._getDate(), { guard : true })
                                 .scrollToVal(300);
                         });
                     });
@@ -75,13 +50,77 @@ modules.define('input', [
             },
 
             focused : function(modName, modVal) {
-                if(modVal) {
-                    this._popup.setMod('visible', true);
-                    // при инициализации попап скрыт и нужные размеры в календаре считаются неверно, принудительно
-                    // пересчитать
-                    this._calendar && this._calendar.update().scrollToVal();
-                }
+                modVal ? this.openPopup() : this.closePopup();
             }
+        },
+
+        _getDate : function() {
+            if(!this.getVal()) return;
+
+            var val = this.getVal().split('.').reverse(),
+                year = val[0],
+                month = val[1] - 1,
+                day = val[2],
+                date = new Date(year, month, day);
+
+            return isNaN(date.getTime()) ? undefined : date;
+        },
+
+        _initPopup : function() {
+            var _this = this;
+
+            this._popup = BEMDOM.init(BEMHTML.apply({
+                block : 'popup',
+                mods : { autoclosable : true, target : 'anchor', theme : 'islands' },
+                mix : { block : 'input-date', elem : 'popup', elemMods : { theme : this.getMod('theme') } },
+                directions : this.params.directions,
+                content : {
+                    block : 'calendar-year',
+                    mods : { theme : 'islands' },
+                    val : this._getDate()
+                }
+            })).bem(Popup);
+            BEMDOM.append($(document.body), this._popup.domElem);
+            this._popup.setAnchor(this);
+
+            this._popup._domEvents().on('mousedown', function() {
+                _this._popup._mouseDown = true;
+            });
+
+            // TODO: close popup when it's losing focus(blur inside)
+
+            this._popup._events().on({ modName : 'visible', modVal : '' }, function(e) {
+                delete e.target._mouseDown;
+            });
+        },
+
+        _isPopupFocused : function() {
+            return this._popup.getMod('visible') &&
+                (this._popup._mouseDown || this._popup.domElem.find(":focus").length);
+        },
+
+        openPopup : function() {
+            this._popup.setMod('visible', true);
+            // при инициализации попап скрыт и нужные размеры в календаре считаются неверно, принудительно
+            // пересчитать
+            this._calendar && this._calendar.update().scrollToVal();
+
+            return this;
+        },
+
+        closePopup : function(force) {
+            var _this = this;
+
+            if(force) {
+                this._popup.delMod('visible');
+            } else {
+                // задержка чтобы поймать клик
+                setTimeout(function() {
+                    !_this._isPopupFocused() && _this._popup.delMod('visible');
+                }, 300);
+            }
+
+            return this;
         }
     }));
 });
