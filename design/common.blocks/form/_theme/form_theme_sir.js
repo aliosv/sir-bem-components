@@ -41,7 +41,7 @@ modules.define('form', [
 
                     formControl
                         .setMod('error', true)
-                        .setError(validationErrors[key].errors.reverse()[0]);
+                        .setError(validationErrors[key].errors[0]);
 
                     this._errors[formControl._uniqId] = formControl;
                 }, this);
