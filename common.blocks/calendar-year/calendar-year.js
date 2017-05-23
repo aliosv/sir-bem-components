@@ -73,6 +73,11 @@ modules.define('calendar-year', [
             return this._val;
         },
 
+        /**
+         * @param {Date} [val]
+         * @param {Object} [data]
+         * @returns {this}
+         */
         setVal : function(val, data) {
             if(val === this._val) return this;
 
@@ -93,7 +98,7 @@ modules.define('calendar-year', [
 
                     calendar.getVal() !== val && calendar.setVal(val);
                 } else {
-                    return this.changeYear(val.getFullYear()).setVal(val);
+                    return this.changeYear(val.getFullYear()).setVal.apply(this, arguments);
                 }
             }
 

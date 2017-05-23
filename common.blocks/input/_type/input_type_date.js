@@ -1,22 +1,12 @@
 /** @class input */
 modules.define('input', [
-    'i-bem-dom', 'BEMHTML', 'popup', 'jquery__inputmask'
-], function(provide, BEMDOM, BEMHTML, Popup, $, Block) {
+    'i-bem-dom', 'BEMHTML', 'popup'
+], function(provide, BEMDOM, BEMHTML, Popup, Block) {
     provide(Block.declMod({ modName : 'type', modVal : 'date' }, /** @lends input.prototype */{
         onSetMod : {
             js : {
                 inited : function() {
                     var _this = this;
-
-                    this._elem('control').domElem.inputmask({
-                        alias : 'dd.mm.yyyy'
-                    });
-
-                    // jQuery.inputmask блокирует всплытие события click, нужного для функционирования блока
-                    // popup_autoclosable
-                    this._elem('control').domElem.on('click', function() {
-                        _this.domElem.click();
-                    });
 
                     this._initPopup();
 
@@ -29,18 +19,14 @@ modules.define('input', [
 
                             var date = e.target.getVal();
 
-                            _this.setVal(date ? [
-                                ('0' + date.getDate()).slice(-2),
-                                ('0' + (date.getMonth() + 1)).slice(-2),
-                                date.getFullYear()
-                            ].join('.') : date, { guard : true });
+                            _this.setVal(date && date.toISOString(), { guard : true });
                         });
 
                         _this._events().on('change', function(e, data) {
                             if(data && data.guard) return;
 
                             _this._calendar
-                                .setVal(_this._getDate(), { guard : true })
+                                .setVal(_this._getDateVal(), { guard : true })
                                 .scrollToVal(300);
                         });
                     });
@@ -54,16 +40,40 @@ modules.define('input', [
             }
         },
 
-        _getDate : function() {
+        /**
+         * Creates Date from blocks _val
+         * @returns {Date|undefined}
+         * @private
+         */
+        _getDateVal : function() {
             if(!this.getVal()) return;
 
-            var val = this.getVal().split('.').reverse(),
-                year = val[0],
-                month = val[1] - 1,
-                day = val[2],
-                date = new Date(year, month, day);
+            var val = this.getVal().match(/^(\d\d)\.(\d\d)\.(\d\d\d\d)$/),
+                date = val && new Date(val[3], val[2] - 1, val[1]);
 
-            return isNaN(date.getTime()) ? undefined : date;
+            // returns undefined if date is invalid
+            return !date || isNaN(date.getTime()) ? undefined : date;
+        },
+
+        /**
+         * Converts value to target _val syntax(current: dd.mm.yyyy)
+         * @param {*} val
+         * @private
+         */
+        _getNormalizedVal : function(val) {
+            var date;
+
+            if(date = val && val.match(/(\d\d)\.(\d\d)\.(\d\d\d\d)$/)) {
+                date = new Date(date[3], date[2] - 1, date[1]);
+            } else if(val && val.match(/^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\.\d\d\dZ$/)) {
+                date = new Date(val);
+            } else {
+                return val;
+            }
+
+            return isNaN(date.getTime()) ? val : [
+                '00' + date.getDate(), '00' + (date.getMonth() + 1), date.getFullYear()
+            ].join('.').replace(/0+(.[0-9])\./g, '$1.');
         },
 
         _initPopup : function() {
@@ -77,10 +87,10 @@ modules.define('input', [
                 content : {
                     block : 'calendar-year',
                     mods : { theme : 'islands' },
-                    val : this._getDate()
+                    val : this._getDateVal()
                 }
             })).bem(Popup);
-            BEMDOM.append($(document.body), this._popup.domElem);
+            BEMDOM.append(BEMDOM.doc.children('body'), this._popup.domElem);
             this._popup.setAnchor(this);
 
             this._popup._domEvents().on('mousedown', function() {
@@ -121,6 +131,18 @@ modules.define('input', [
             }
 
             return this;
+        },
+
+        /**
+         * @param {String} val ISO 8601 или значение по дефолтной маске
+         * @returns {this}
+         */
+        setVal : function(val) {
+            if(val === this._val) return this.__base.apply(this, arguments);
+
+            var args = [this._getNormalizedVal(val)].concat(Array.prototype.slice.call(arguments, 1));
+            
+            return this.__base.apply(this, args);
         }
     }));
 });

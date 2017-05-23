@@ -9,7 +9,6 @@
     {
         shouldDeps : [
             { block : 'calendar-year', mods : { theme : 'islands' } },
-            { block : 'jquery', elems : ['inputmask'] },
             { block : 'popup', mods : { autoclosable : true, target : 'anchor', theme : 'islands' } }
         ]
     }
