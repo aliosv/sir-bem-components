@@ -64,7 +64,7 @@ modules.define('calendar-year', [
             // init elem
             this.findChildElem('inner');
 
-            this.setVal();
+            delete this._val;
 
             return this;
         },
