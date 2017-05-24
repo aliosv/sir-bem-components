@@ -20,6 +20,9 @@ modules.define('input', [
                             var date = e.target.getVal();
 
                             _this.setVal(date && date.toISOString(), { guard : true });
+
+                            // закрывать попап с календарем при выборе в нем даты
+                            if(date) _this.closePopup(true);
                         });
 
                         _this._events().on('change', function(e, data) {
