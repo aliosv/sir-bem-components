@@ -21,17 +21,6 @@ modules.define('calendar-month', [], function(provide, Block) {
             }
         },
 
-        _checkRange : function(date) {
-            return date.getFullYear() === this._date.getFullYear() &&
-                date.getMonth() === this._date.getMonth();
-        },
-
-        getDayByDate : function(date) {
-            if(!date || !this._checkRange(date)) return;
-
-            return this._elems('day').get(date.getDate() - 1);
-        },
-
         getVal : function() {
             return this._val;
         },
