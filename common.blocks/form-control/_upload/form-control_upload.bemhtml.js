@@ -19,11 +19,20 @@ block('form-control').mod('upload')(
                     {
                         elem : 'control',
                         tag : 'input',
+                        attrs : { type : 'file' }
+                    },
+                    {
+                        elem : 'val',
+                        tag : 'input',
                         attrs : { name : ctx.name, type : 'file' }
                     },
                     {
                         elem : 'preview',
                         tag : 'img'
+                    },
+                    {
+                        elem : 'delete',
+                        content : 'Удалить'
                     }
                 ]
             },

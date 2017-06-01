@@ -98,6 +98,18 @@
 .form-control_theme_sir.form-control_upload .form-control__preview[src] {
     background: #fff;
 }
+.form-control_theme_sir.form-control_upload .form-control__delete {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: 2;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 400;
+    line-height: 2;
+}
 
 .form-control_theme_sir.form-control_upload_avatar {
     padding: 0 0 0 96px;
@@ -123,6 +135,9 @@
     color: #414141;
     white-space: pre;
 }
+.form-control_theme_sir.form-control_upload_avatar .form-control__delete {
+    font-size: 13px;
+}
 
 .form-control_theme_sir.form-control_upload_project-cover {
     position: relative;
@@ -139,6 +154,7 @@
     line-height: 1.25;
     text-align: center;
     color: #ffffff;
+    text-shadow: 0 0 1px #000;
     z-index: 2;
 }
 .form-control_theme_sir.form-control_upload_project-cover .form-control__control-wrap {
@@ -146,4 +162,7 @@
     height: 250px;
     background: #5a5a5a url(form-control_upload_project-cover.svg) 100% 100% no-repeat;
     background-size: 95% auto;
+}
+.form-control_theme_sir.form-control_upload_project-cover .form-control__delete {
+    font-size: 16px;
 }

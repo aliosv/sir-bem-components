@@ -10,6 +10,8 @@ modules.define('form-control', [], function(provide, Block) {
                         $preview = this._elem('preview').domElem,
                         preview = $preview.get(0);
 
+                    this._emptyFilelist = this._elem('val').domElem.get(0).files;
+
                     preview.onload = function() {
                         var viewRatio = $view.width() / $view.height(),
                             imageRatio = preview.naturalWidth / preview.naturalHeight;
@@ -34,8 +36,37 @@ modules.define('form-control', [], function(provide, Block) {
                             });
                         }
                     };
+
+                    this._domEvents('delete').on('click', function() {
+                        this.setVal();
+                    });
                 }
             }
+        },
+
+        /**
+         * @param {String|Filelist} val
+         */
+        setVal : function(val) {
+            var previewUrl = val ? typeof val === 'string' ? val : URL.createObjectURL(val[0]) : '';
+
+            this._elem('preview')
+                .setMod('visible', !!previewUrl)
+                .domElem.attr('src', previewUrl);
+
+            this._elem('delete').setMod('visible', !!val);
+
+            if(typeof val === 'string' || !val) {
+                this._elem('val').domElem
+                    .attr('type', 'text')
+                    .get(0).value = val || '';
+            } else {
+                this._elem('val').domElem
+                    .attr('type', 'file')
+                    .get(0).files = val || this._emptyFilelist;
+            }
+
+            return this;
         }
     }, /** @lends form-control */{
         onInit : function() {
@@ -44,11 +75,7 @@ modules.define('form-control', [], function(provide, Block) {
             this._domEvents('control').on('change', function(e) {
                 if(!this.hasMod('upload')) return;
 
-                var file = e.currentTarget.files[0];
-
-                this._elem('preview')
-                    .setMod('visible', !!file || '')
-                    .domElem.attr('src', file ? URL.createObjectURL(file) : '');
+                this.setVal(e.currentTarget.files);
             });
         }
     }));
