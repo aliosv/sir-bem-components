@@ -55,6 +55,18 @@
     background: #7cb507;
 }
 
+.notify__message_pending {
+    padding-left: 16px;
+}
+
+.notify__message_pending:before {
+    display: none;
+}
+
+.notify__message .spin {
+    margin-right: 10px;
+}
+
 .notify__close
 {
     font-family: monospace;

@@ -1,6 +1,7 @@
 ({
     shouldDeps : [
         'jquery',
-        'z-index-group'
+        'z-index-group',
+        { block : 'spin', mods : { theme : 'islands' } }
     ]
 })

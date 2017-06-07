@@ -21,28 +21,40 @@ modules.define('notify', ['i-bem-dom', 'BEMHTML', 'jquery'], function(provide, B
 
         _messages : [],
 
-        add : function(message, type) {
+        add : function(message, type, promise) {
             var _this = this,
                 elemMods = {},
+                isPending = type === 'pending',
                 $message,
                 timer;
 
             if(type === 'error') elemMods.error = true;
             else if(type === 'success') elemMods.success = true;
+            else if(isPending) elemMods.pending = true;
 
             $message = $(BEMHTML.apply({
                 block : 'notify',
                 elem : 'message',
                 elemMods : elemMods,
                 content : [
+                    isPending ? {
+                        block : 'spin',
+                        mods : { size : 'm', theme : 'islands', visible : true }
+                    } : '',
                     message,
                     { elem : 'close', content : '&#10060;' }
                 ]
             }));
 
-            timer = setTimeout(function() {
-                _this.remove($message);
-            }, this.params.duration || 5000);
+            if(isPending) {
+                promise.always(function() {
+                    _this.remove($message);
+                });
+            } else {
+                timer = setTimeout(function() {
+                    _this.remove($message);
+                }, this.params.duration || 5000);
+            }
 
             this._messages.push([$message, timer]);
 
@@ -55,6 +67,7 @@ modules.define('notify', ['i-bem-dom', 'BEMHTML', 'jquery'], function(provide, B
                 });
             }, 50);
 
+            // TODO: keep save pending messages?
             if(this._messages.length > (this.params.limit || 5)) {
                 this.remove(0);
             }
@@ -67,7 +80,7 @@ modules.define('notify', ['i-bem-dom', 'BEMHTML', 'jquery'], function(provide, B
 
             if(typeof index === 'number') {
                 $message = this._messages.splice(index, 1)[0];
-                clearTimeout($message[1]);
+                $message[1] && clearTimeout($message[1]);
                 $message[0].css({
                     opacity : 0,
                     top : 100 + 'px'

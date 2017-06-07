@@ -9,12 +9,17 @@
     content : [
         {
             block : 'button', mods : { size : 'm', theme : 'sir' },
-            text : 'success'
+            text : 'Success'
         },
         ' ',
         {
             block : 'button', mods : { size : 'm', theme : 'sir' },
             text : 'Error'
+        },
+        ' ',
+        {
+            block : 'button', mods : { size : 'm', theme : 'sir' },
+            text : 'Pending'
         }
     ]
 })
