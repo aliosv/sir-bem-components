@@ -65,6 +65,8 @@ modules.define('form', [
 
                 block && block.setVal && block.setVal(data[name]);
             }, this);
+
+            return this;
         },
 
         updateWithPromise : function(promise) {
