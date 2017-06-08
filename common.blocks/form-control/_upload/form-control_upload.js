@@ -25,14 +25,16 @@ modules.define('form-control', [], function(provide, Block) {
             var $view = this._elem('control-wrap').domElem,
                 $preview = this._elem('preview').domElem,
                 preview = $preview.get(0),
-                viewRatio = $view.width() / $view.height(),
+                viewWidth = $view.get(0).clientWidth,
+                viewHeight = $view.get(0).clientHeight,
+                viewRatio = viewWidth / viewHeight,
                 imageRatio = preview.naturalWidth / preview.naturalHeight;
 
             if(imageRatio > viewRatio) {
                 $preview.css({
                     height : '100%',
                     width : 'auto',
-                    marginLeft : -($view.height() * imageRatio / 2) + 'px',
+                    marginLeft : -(viewHeight * imageRatio / 2) + 'px',
                     marginTop : 0,
                     left : '50%',
                     top : '0'
@@ -42,7 +44,7 @@ modules.define('form-control', [], function(provide, Block) {
                     height : 'auto',
                     width : '100%',
                     marginLeft : 0,
-                    marginTop : -($view.width() / imageRatio / 2) + 'px',
+                    marginTop : -(viewWidth / imageRatio / 2) + 'px',
                     left : '0',
                     top : '50%'
                 });
