@@ -6,41 +6,46 @@ modules.define('form-control', [], function(provide, Block) {
         onSetMod : {
             js : {
                 inited : function() {
-                    var $view = this._elem('control-wrap').domElem,
-                        $preview = this._elem('preview').domElem,
-                        preview = $preview.get(0);
+                    var _this = this;
 
                     this._emptyFilelist = this._elem('val').domElem.get(0).files;
 
-                    preview.onload = function() {
-                        var viewRatio = $view.width() / $view.height(),
-                            imageRatio = preview.naturalWidth / preview.naturalHeight;
-
-                        if(imageRatio > viewRatio) {
-                            $preview.css({
-                                height : '100%',
-                                width : 'auto',
-                                marginLeft : -($view.height() * imageRatio / 2) + 'px',
-                                marginTop : 0,
-                                left : '50%',
-                                top : '0'
-                            });
-                        } else {
-                            $preview.css({
-                                height : 'auto',
-                                width : '100%',
-                                marginLeft : 0,
-                                marginTop : -($view.width() / imageRatio / 2) + 'px',
-                                left : '0',
-                                top : '50%'
-                            });
-                        }
+                    this._elem('preview').domElem.get(0).onload = function() {
+                        _this.reflow();
                     };
 
                     this._domEvents('delete').on('click', function() {
                         this.setVal();
                     });
                 }
+            }
+        },
+
+        reflow : function() {
+            var $view = this._elem('control-wrap').domElem,
+                $preview = this._elem('preview').domElem,
+                preview = $preview.get(0),
+                viewRatio = $view.width() / $view.height(),
+                imageRatio = preview.naturalWidth / preview.naturalHeight;
+
+            if(imageRatio > viewRatio) {
+                $preview.css({
+                    height : '100%',
+                    width : 'auto',
+                    marginLeft : -($view.height() * imageRatio / 2) + 'px',
+                    marginTop : 0,
+                    left : '50%',
+                    top : '0'
+                });
+            } else {
+                $preview.css({
+                    height : 'auto',
+                    width : '100%',
+                    marginLeft : 0,
+                    marginTop : -($view.width() / imageRatio / 2) + 'px',
+                    left : '0',
+                    top : '50%'
+                });
             }
         },
 
