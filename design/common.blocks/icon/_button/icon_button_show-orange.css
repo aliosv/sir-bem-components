@@ -1,0 +1,7 @@
+.icon_button_show-orange {
+    background-image: url(icon_button_show-orange.svg);
+}
+
+.button .icon_button_show-orange {
+    background-size: 55% auto;
+}
