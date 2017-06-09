@@ -2,6 +2,6 @@
   "name": "sir-bem-components",
   "version": "0.0.1",
   "dependencies": {
-    "jquery.inputmask": "^3.3.4"
+    "inputmask": "^3.3.4"
   }
 }
