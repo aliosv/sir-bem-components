@@ -1,0 +1,7 @@
+.icon_button_cancel-grey {
+    background-image: url(icon_button_cancel-grey.svg);
+}
+
+.button .icon_button_cancel-grey {
+    background-size: 60% auto;
+}
