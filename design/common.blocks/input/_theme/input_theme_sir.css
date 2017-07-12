@@ -118,6 +118,7 @@
     cursor: default;
 
     color: #e5e5e5;
+    -webkit-text-fill-color: #e5e5e5;
     }
 
 .input_theme_sir.input_size_m {
