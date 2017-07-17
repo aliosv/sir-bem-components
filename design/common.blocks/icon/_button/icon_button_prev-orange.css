@@ -1,0 +1,7 @@
+.icon_button_prev-orange {
+    background-image: url(icon_button_prev-orange.svg);
+}
+
+.button .icon_button_prev-orange {
+    background-size: 40% auto;
+}

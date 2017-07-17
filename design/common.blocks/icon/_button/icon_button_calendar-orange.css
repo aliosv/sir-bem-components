@@ -1,0 +1,7 @@
+.icon_button_calendar-orange {
+    background-image: url(icon_button_calendar-orange.svg);
+}
+
+.button .icon_button_calendar-orange {
+    background-size: 40% auto;
+}
