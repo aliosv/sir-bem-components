@@ -1,0 +1,7 @@
+.icon_button_to-begin-orange {
+    background-image: url(icon_button_to-begin-orange.svg);
+}
+
+.button .icon_button_to-begin-orange {
+    background-size: 40% auto;
+}
