@@ -1,0 +1,7 @@
+.icon_button_zoom-in-orange {
+    background-image: url(icon_button_zoom-in-orange.svg);
+}
+
+.button .icon_button_zoom-in-orange {
+    background-size: 40% auto;
+}
