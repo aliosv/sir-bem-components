@@ -47,428 +47,237 @@ var BEMHTML;
 /// --------- BEM-XJST Runtime Start ----
 /// -------------------------------------
 var BEMHTML = function(module, exports) {
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.bemhtml = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var inherits = require('inherits');
-var Match = require('../bemxjst/match').Match;
-var BemxjstEntity = require('../bemxjst/entity').Entity;
+var inherits;
 
-/**
- * @class Entity
- * @param {BEMXJST} bemxjst
- * @param {String} block
- * @param {String} elem
- * @param {Array} templates
- */
-function Entity(bemxjst) {
-  this.bemxjst = bemxjst;
-
-  this.jsClass = null;
-
-  // "Fast modes"
-  this.tag = new Match(this, 'tag');
-  this.attrs = new Match(this, 'attrs');
-  this.js = new Match(this, 'js');
-  this.mix = new Match(this, 'mix');
-  this.bem = new Match(this, 'bem');
-  this.cls = new Match(this, 'cls');
-
-  BemxjstEntity.apply(this, arguments);
-}
-
-inherits(Entity, BemxjstEntity);
-exports.Entity = Entity;
-
-Entity.prototype.init = function(block, elem) {
-  this.block = block;
-  this.elem = elem;
-
-  // Class for jsParams
-  this.jsClass = this.bemxjst.classBuilder.build(this.block, this.elem);
-};
-
-Entity.prototype._initRest = function(key) {
-  if (key === 'default') {
-    this.rest[key] = this.def;
-  } else if (key === 'tag' ||
-    key === 'attrs' ||
-    key === 'js' ||
-    key === 'mix' ||
-    key === 'bem' ||
-    key === 'cls' ||
-    key === 'content') {
-    this.rest[key] = this[key];
-  } else {
-    if (!this.rest.hasOwnProperty(key))
-      this.rest[key] = new Match(this, key);
-  }
-};
-
-Entity.prototype.defaultBody = function(context) {
-  return this.bemxjst.render(context,
-                             this,
-                             this.tag.exec(context),
-                             context.ctx.js !== false ?
-                               this.js.exec(context) :
-                               undefined,
-                             this.bem.exec(context),
-                             this.cls.exec(context),
-                             this.mix.exec(context),
-                             this.attrs.exec(context),
-                             this.content.exec(context));
-};
-
-},{"../bemxjst/entity":5,"../bemxjst/match":8,"inherits":11}],2:[function(require,module,exports){
-var inherits = require('inherits');
-var utils = require('../bemxjst/utils');
-var Entity = require('./entity').Entity;
-var BEMXJST = require('../bemxjst');
-
-function BEMHTML(options) {
-  BEMXJST.apply(this, arguments);
-
-  this._shortTagCloser = typeof options.xhtml !== 'undefined' &&
-                            options.xhtml ? '/>' : '>';
-
-  this._elemJsInstances = options.elemJsInstances;
-  this._omitOptionalEndTags = options.omitOptionalEndTags;
-  this._unquotedAttrs = typeof options.unquotedAttrs === 'undefined' ?
-    false :
-    options.unquotedAttrs;
-}
-
-inherits(BEMHTML, BEMXJST);
-module.exports = BEMHTML;
-
-BEMHTML.prototype.Entity = Entity;
-
-BEMHTML.prototype.runMany = function(arr) {
-  var out = '';
-  var context = this.context;
-  var prevPos = context.position;
-  var prevNotNewList = context._notNewList;
-
-  if (prevNotNewList) {
-    context._listLength += arr.length - 1;
-  } else {
-    context.position = 0;
-    context._listLength = arr.length;
-  }
-  context._notNewList = true;
-
-  if (this.canFlush) {
-    for (var i = 0; i < arr.length; i++)
-      out += context._flush(this._run(arr[i]));
-  } else {
-    for (var i = 0; i < arr.length; i++)
-      out += this._run(arr[i]);
-  }
-
-  if (!prevNotNewList)
-    context.position = prevPos;
-
-  return out;
-};
-
-BEMHTML.prototype.render = function(context,
-                                   entity,
-                                   tag,
-                                   js,
-                                   bem,
-                                   cls,
-                                   mix,
-                                   attrs,
-                                   content) {
-  var ctx = context.ctx;
-
-  if (tag === undefined)
-    tag = 'div';
-  else if (!tag)
-    return (content || content === 0) ? this._run(content) : '';
-
-  var out = '<' + tag;
-
-  var ctxJS = ctx.js;
-  if (ctxJS !== false) {
-    if (js === true)
-      js = {};
-
-    if (js && js !== ctx.js) {
-      if (ctxJS !== true)
-        js = utils.extend(ctxJS, js);
-    }  else if (ctxJS === true) {
-      js = {};
-    }
-  }
-
-  var jsParams;
-  if (js) {
-    jsParams = {};
-    jsParams[entity.jsClass] = js;
-  }
-
-  var isBEM = typeof bem !== 'undefined' ? bem : entity.block || entity.elem;
-  isBEM = !!isBEM;
-
-  var addJSInitClass = jsParams && (
-    this._elemJsInstances ?
-      (entity.block || entity.elem) :
-      (entity.block && !entity.elem)
-  );
-
-  if (!isBEM && !cls)
-    return this.renderClose(out, context, tag, attrs, isBEM, ctx, content);
-
-  out += ' class=';
-  var classValue = '';
-  if (isBEM) {
-    classValue += entity.jsClass;
-    classValue += this.buildModsClasses(entity.block, entity.elem,
-                                        entity.elem ?
-                                          context.elemMods :
-                                          context.mods);
-
-    if (ctx.mix && mix && mix !== ctx.mix)
-      mix = [].concat(mix, ctx.mix);
-
-    if (mix) {
-      var m = this.renderMix(entity, mix, jsParams, addJSInitClass);
-      classValue += m.out;
-      jsParams = m.jsParams;
-      addJSInitClass = m.addJSInitClass;
-    }
-
-    if (cls)
-      classValue += ' ' + (typeof cls === 'string' ?
-                    utils.attrEscape(cls).trim() : cls);
-  } else {
-    classValue += typeof cls === 'string' ?
-      utils.attrEscape(cls).trim() :
-      cls;
-  }
-
-  if (addJSInitClass)
-    classValue += ' i-bem';
-
-  out += this._unquotedAttrs && utils.isUnquotedAttr(classValue) ?
-    classValue :
-    ('"' + classValue + '"');
-
-  if (isBEM && jsParams)
-    out += ' data-bem=\'' + utils.jsAttrEscape(JSON.stringify(jsParams)) + '\'';
-
-  return this.renderClose(out, context, tag, attrs, isBEM, ctx, content);
-};
-
-var OPTIONAL_END_TAGS = {
-  // html4 https://html.spec.whatwg.org/multipage/syntax.html#optional-tags
-  html: 1, head: 1, body: 1, p: 1, ul: 1, ol: 1, li: 1, dt: 1, dd: 1,
-  colgroup: 1, thead: 1, tbody: 1, tfoot: 1, tr: 1, th: 1, td: 1, option: 1,
-
-  // html5 https://www.w3.org/TR/html5/syntax.html#optional-tags
-  /* dl — Neither tag is omissible */ rb: 1, rt: 1, rtc: 1, rp: 1, optgroup: 1
-};
-
-BEMHTML.prototype.renderClose = function(prefix,
-                                         context,
-                                         tag,
-                                         attrs,
-                                         isBEM,
-                                         ctx,
-                                         content) {
-  var out = prefix;
-
-  out += this.renderAttrs(attrs, ctx);
-
-  if (utils.isShortTag(tag)) {
-    out += this._shortTagCloser;
-    if (this.canFlush)
-      out = context._flush(out);
-  } else {
-    out += '>';
-    if (this.canFlush)
-      out = context._flush(out);
-
-    // TODO(indutny): skip apply next flags
-    if (content || content === 0)
-      out += this.renderContent(content, isBEM);
-
-    if (!this._omitOptionalEndTags || !OPTIONAL_END_TAGS.hasOwnProperty(tag))
-      out += '</' + tag + '>';
-  }
-
-  if (this.canFlush)
-    out = context._flush(out);
-  return out;
-};
-
-BEMHTML.prototype.renderAttrs = function(attrs, ctx) {
-  var out = '';
-
-  // NOTE: maybe we need to make an array for quicker serialization
-  if (utils.isObj(attrs) || utils.isObj(ctx.attrs)) {
-    attrs = utils.extend(attrs, ctx.attrs);
-
-    /* jshint forin : false */
-    for (var name in attrs) {
-      var attr = attrs[name];
-      if (attr === undefined || attr === false || attr === null)
-        continue;
-
-      if (attr === true) {
-        out += ' ' + name;
-      } else {
-        var attrVal = utils.isSimple(attr) ? attr : this.context.reapply(attr);
-        out += ' ' + name + '=';
-
-        out += this._unquotedAttrs && utils.isUnquotedAttr(attrVal) ?
-          attrVal :
-          ('"' + utils.attrEscape(attrVal) + '"');
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  inherits = function(ctor, superCtor) {
+    ctor.super_ = superCtor;
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
       }
-    }
-  }
-
-  return out;
-};
-
-BEMHTML.prototype.renderMix = function(entity, mix, jsParams, addJSInitClass) {
-  var visited = {};
-  var context = this.context;
-  var js = jsParams;
-  var addInit = addJSInitClass;
-
-  visited[entity.jsClass] = true;
-
-  // Transform mix to the single-item array if it's not array
-  if (!Array.isArray(mix))
-    mix = [ mix ];
-
-  var classBuilder = this.classBuilder;
-
-  var out = '';
-  for (var i = 0; i < mix.length; i++) {
-    var item = mix[i];
-    if (!item)
-      continue;
-    if (typeof item === 'string')
-      item = { block: item, elem: undefined };
-
-    var hasItem = false;
-
-    if (item.elem) {
-      hasItem = item.elem !== entity.elem && item.elem !== context.elem ||
-        item.block && item.block !== entity.block;
-    } else if (item.block) {
-      hasItem = !(item.block === entity.block && item.mods) ||
-        item.mods && entity.elem;
-    }
-
-    var block = item.block || item._block || context.block;
-    var elem = item.elem || item._elem || context.elem;
-    var key = classBuilder.build(block, elem);
-
-    var classElem = item.elem ||
-                    item._elem ||
-                    (item.block ? undefined : context.elem);
-    if (hasItem)
-      out += ' ' + classBuilder.build(block, classElem);
-
-    out += this.buildModsClasses(block, classElem,
-      (item.elem || !item.block && (item._elem || context.elem)) ?
-        item.elemMods : item.mods);
-
-    if (item.js) {
-      if (!js)
-        js = {};
-
-      js[classBuilder.build(block, item.elem)] =
-          item.js === true ? {} : item.js;
-      if (!addInit)
-        addInit = block && !item.elem;
-    }
-
-    // Process nested mixes
-    if (!hasItem || visited[key])
-      continue;
-
-    visited[key] = true;
-    var nestedEntity = this.entities[key];
-    if (!nestedEntity)
-      continue;
-
-    var oldBlock = context.block;
-    var oldElem = context.elem;
-    var nestedMix = nestedEntity.mix.exec(context);
-    context.elem = oldElem;
-    context.block = oldBlock;
-
-    if (!nestedMix)
-      continue;
-
-    for (var j = 0; j < nestedMix.length; j++) {
-      var nestedItem = nestedMix[j];
-      if (!nestedItem) continue;
-
-      if (!nestedItem.block &&
-          !nestedItem.elem ||
-          !visited[classBuilder.build(nestedItem.block, nestedItem.elem)]) {
-        if (nestedItem.block) continue;
-
-        nestedItem._block = block;
-        nestedItem._elem = elem;
-        mix = mix.slice(0, i + 1).concat(
-          nestedItem,
-          mix.slice(i + 1)
-        );
-      }
-    }
-  }
-
-  return {
-    out: out,
-    jsParams: js,
-    addJSInitClass: addInit
+    });
   };
-};
+} else {
+  // old school shim for old browsers
+  inherits = function(ctor, superCtor) {
+    ctor.super_ = superCtor;
+    var TempCtor = function() {};
+    TempCtor.prototype = superCtor.prototype;
+    ctor.prototype = new TempCtor();
+    ctor.prototype.constructor = ctor;
+  };
+}
 
-BEMHTML.prototype.buildModsClasses = function(block, elem, mods) {
-  if (!mods)
-    return '';
+var utils = {};
 
-  var res = '';
+var amp = '&amp;';
+var lt = '&lt;';
+var gt = '&gt;';
+var quot = '&quot;';
+var singleQuot = '&#39;';
 
-  var modName;
+var matchXmlRegExp = /[&<>]/;
 
-  /*jshint -W089 */
-  for (modName in mods) {
-    if (!mods.hasOwnProperty(modName) || modName === '')
-      continue;
+utils.xmlEscape = function(string) {
+  var str = '' + string;
+  var match = matchXmlRegExp.exec(str);
 
-    var modVal = mods[modName];
-    if (!modVal && modVal !== 0) continue;
-    if (typeof modVal !== 'boolean')
-      modVal += '';
+  if (!match)
+    return str;
 
-    var builder = this.classBuilder;
-    res += ' ' + (elem ?
-                  builder.buildElemClass(block, elem, modName, modVal) :
-                  builder.buildBlockClass(block, modName, modVal));
+  var escape;
+  var html = '';
+  var index = 0;
+  var lastIndex = 0;
+
+  for (index = match.index; index < str.length; index++) {
+    switch (str.charCodeAt(index)) {
+      case 38: // &
+        escape = amp;
+        break;
+      case 60: // <
+        escape = lt;
+        break;
+      case 62: // >
+        escape = gt;
+        break;
+      default:
+        continue;
+    }
+
+    if (lastIndex !== index)
+      html += str.substring(lastIndex, index);
+
+    lastIndex = index + 1;
+    html += escape;
   }
 
+  return lastIndex !== index ?
+    html + str.substring(lastIndex, index) :
+    html;
+};
+
+var matchAttrRegExp = /["&]/;
+
+utils.attrEscape = function(string) {
+  var str = '' + string;
+  var match = matchAttrRegExp.exec(str);
+
+  if (!match)
+    return str;
+
+  var escape;
+  var html = '';
+  var index = 0;
+  var lastIndex = 0;
+
+  for (index = match.index; index < str.length; index++) {
+    switch (str.charCodeAt(index)) {
+      case 34: // "
+        escape = quot;
+        break;
+      case 38: // &
+        escape = amp;
+        break;
+      default:
+        continue;
+    }
+
+    if (lastIndex !== index)
+      html += str.substring(lastIndex, index);
+
+    lastIndex = index + 1;
+    html += escape;
+  }
+
+  return lastIndex !== index ?
+    html + str.substring(lastIndex, index) :
+    html;
+};
+
+var matchJsAttrRegExp = /['&]/;
+
+utils.jsAttrEscape = function(string) {
+  var str = '' + string;
+  var match = matchJsAttrRegExp.exec(str);
+
+  if (!match)
+    return str;
+
+  var escape;
+  var html = '';
+  var index = 0;
+  var lastIndex = 0;
+
+  for (index = match.index; index < str.length; index++) {
+    switch (str.charCodeAt(index)) {
+      case 38: // &
+        escape = amp;
+        break;
+      case 39: // '
+        escape = singleQuot;
+        break;
+      default:
+        continue;
+    }
+
+    if (lastIndex !== index)
+      html += str.substring(lastIndex, index);
+
+    lastIndex = index + 1;
+    html += escape;
+  }
+
+  return lastIndex !== index ?
+    html + str.substring(lastIndex, index) :
+    html;
+};
+
+utils.extend = function(o1, o2) {
+  if (!o1 || !o2)
+    return o1 || o2;
+
+  var res = {};
+  var n;
+
+  for (n in o1)
+    if (o1.hasOwnProperty(n))
+      res[n] = o1[n];
+  for (n in o2)
+    if (o2.hasOwnProperty(n))
+      res[n] = o2[n];
   return res;
 };
 
-},{"../bemxjst":7,"../bemxjst/utils":10,"./entity":1,"inherits":11}],3:[function(require,module,exports){
+var SHORT_TAGS = { // hash for quick check if tag short
+  area: 1, base: 1, br: 1, col: 1, command: 1, embed: 1, hr: 1, img: 1,
+  input: 1, keygen: 1, link: 1, meta: 1, param: 1, source: 1, wbr: 1
+};
+
+utils.isShortTag = function(t) {
+  return SHORT_TAGS.hasOwnProperty(t);
+};
+
+utils.isSimple = function isSimple(obj) {
+  if (!obj || obj === true) return true;
+  if (!obj.block &&
+      !obj.elem &&
+      !obj.tag &&
+      !obj.cls &&
+      !obj.attrs &&
+      obj.hasOwnProperty('html') &&
+      isSimple(obj.html))
+    return true;
+  return typeof obj === 'string' || typeof obj === 'number';
+};
+
+var uniqCount = 0;
+var uniqId = +new Date();
+var uniqExpando = '__' + uniqId;
+var uniqPrefix = 'uniq' + uniqId;
+
+function getUniq() {
+  return uniqPrefix + (++uniqCount);
+}
+utils.getUniq = getUniq;
+
+utils.identify = function(obj, onlyGet) {
+  if (!obj)
+    return getUniq();
+  if (onlyGet || obj[uniqExpando])
+    return obj[uniqExpando];
+
+  var u = getUniq();
+  obj[uniqExpando] = u;
+  return u;
+};
+
+/**
+ * regexp for check may attribute be unquoted
+ *
+ * https://www.w3.org/TR/html4/intro/sgmltut.html#h-3.2.2
+ * https://www.w3.org/TR/html5/syntax.html#attributes
+ */
+var UNQUOTED_ATTR_REGEXP = /^[:\w.-]+$/;
+
+utils.isUnquotedAttr = function(str) {
+  return str && UNQUOTED_ATTR_REGEXP.exec(str);
+};
+
 function ClassBuilder(options) {
   this.modDelim = options.mod || '_';
   this.elemDelim = options.elem || '__';
 }
-exports.ClassBuilder = ClassBuilder;
 
 ClassBuilder.prototype.build = function(block, elem) {
-  if (!elem)
-    return block;
-  else
-    return block + this.elemDelim + elem;
+  return elem ?
+    (block + this.elemDelim + elem) :
+    block;
 };
 
 ClassBuilder.prototype.buildModPostfix = function(modName, modVal) {
@@ -494,9 +303,6 @@ ClassBuilder.prototype.split = function(key) {
   return key.split(this.elemDelim, 2);
 };
 
-},{}],4:[function(require,module,exports){
-var utils = require('./utils');
-
 function Context(bemxjst) {
   this._bemxjst = bemxjst;
 
@@ -516,7 +322,6 @@ function Context(bemxjst) {
 
   this.escapeContent = bemxjst.options.escapeContent === true;
 }
-exports.Context = Context;
 
 Context.prototype._flush = null;
 
@@ -546,15 +351,615 @@ Context.prototype.reapply = function(ctx) {
   return this._bemxjst.run(ctx);
 };
 
-},{"./utils":10}],5:[function(require,module,exports){
-var utils = require('./utils');
-var Match = require('./match').Match;
-var tree = require('./tree');
-var Template = tree.Template;
-var PropertyMatch = tree.PropertyMatch;
-var CompilerOptions = tree.CompilerOptions;
+function MatchNested(template, pred) {
+  this.template = template;
+  this.keys = pred.key;
+  this.value = pred.value;
+}
 
-function Entity(bemxjst, block, elem, templates) {
+MatchNested.prototype.exec = function(context) {
+  var val = context;
+
+  for (var i = 0; i < this.keys.length - 1; i++) {
+    val = val[this.keys[i]];
+    if (!val)
+      return false;
+  }
+
+  val = val[this.keys[i]];
+
+  if (this.value === true)
+    return val !== undefined && val !== '' && val !== false && val !== null;
+
+  return String(val) === this.value;
+};
+
+function MatchCustom(template, pred) {
+  this.template = template;
+  this.body = pred.body;
+}
+
+MatchCustom.prototype.exec = function(context) {
+  return this.body.call(context, context, context.ctx);
+};
+
+function MatchWrap(template) {
+  this.template = template;
+  this.wrap = null;
+}
+
+MatchWrap.prototype.exec = function(context) {
+  var res = this.wrap !== context.ctx;
+  this.wrap = context.ctx;
+  return res;
+};
+
+function MatchExtend(template) {
+  this.template = template;
+  this.wrap = null;
+}
+
+MatchExtend.prototype.exec = function(context) {
+  var res = this.ext !== context.ctx;
+  this.ext = context.ctx;
+  return res;
+};
+
+function AddWrap(template, pred) {
+  this.template = template;
+  this.key = pred.key;
+  this.value = pred.value;
+}
+
+AddWrap.prototype.exec = function(context) {
+  return context[this.key] === this.value;
+};
+
+function Template(predicates, body) {
+  this.predicates = predicates;
+
+  this.body = body;
+}
+
+Template.prototype.wrap = function() {
+  var body = this.body;
+  for (var i = 0; i < this.predicates.length; i++) {
+    var pred = this.predicates[i];
+    body = pred.wrapBody(body);
+  }
+  this.body = body;
+};
+
+Template.prototype.clone = function() {
+  return new Template(this.predicates.slice(), this.body);
+};
+
+function MatchBase() {
+}
+
+MatchBase.prototype.wrapBody = function(body) {
+  return body;
+};
+
+function Item(tree, children) {
+  this.conditions = [];
+  this.children = [];
+
+  for (var i = children.length - 1; i >= 0; i--) {
+    var arg = children[i];
+    if (arg instanceof MatchBase)
+      this.conditions.push(arg);
+    else if (arg === tree.boundBody)
+      this.children[i] = tree.queue.pop();
+    else
+      this.children[i] = arg;
+  }
+}
+
+function WrapMatch(refs) {
+  MatchBase.call(this);
+
+  this.refs = refs;
+}
+inherits(WrapMatch, MatchBase);
+
+WrapMatch.prototype.wrapBody = function(body) {
+  var applyCtx = this.refs.applyCtx;
+
+  if (typeof body !== 'function') return function() { return applyCtx(body); };
+
+  return function() {
+    return applyCtx(body.call(this, this, this.ctx));
+  };
+};
+
+function ReplaceMatch(refs) {
+  MatchBase.call(this);
+
+  this.refs = refs;
+}
+inherits(ReplaceMatch, MatchBase);
+
+ReplaceMatch.prototype.wrapBody = function(body) {
+  var applyCtx = this.refs.applyCtx;
+
+  if (typeof body !== 'function') return function() { return applyCtx(body); };
+
+  return function() {
+    return applyCtx(body.call(this, this, this.ctx));
+  };
+};
+
+function ExtendMatch(refs) {
+  MatchBase.call(this);
+
+  this.refs = refs;
+}
+inherits(ExtendMatch, MatchBase);
+
+ExtendMatch.prototype.wrapBody = function(body) {
+  var applyCtx = this.refs.applyCtx;
+  var local = this.refs.local;
+
+  if (typeof body !== 'function') {
+    return function() {
+      var changes = {};
+
+      var keys = Object.keys(body);
+      for (var i = 0; i < keys.length; i++)
+        changes[keys[i]] = body[keys[i]];
+
+      return local(changes)(function() {
+        return applyCtx(this.ctx);
+      });
+    };
+  }
+
+  return function() {
+    var changes = {};
+
+    var obj = body.call(this, this, this.ctx);
+    var keys = Object.keys(obj);
+    for (var i = 0; i < keys.length; i++)
+      changes[keys[i]] = obj[keys[i]];
+
+    return local(changes)(function() {
+      return applyCtx(this.ctx);
+    });
+  };
+};
+
+function AddMatch(mode, refs) {
+  MatchBase.call(this);
+
+  this.mode = mode;
+  this.refs = refs;
+}
+inherits(AddMatch, MatchBase);
+
+AddMatch.prototype.wrapBody = function(body) {
+  return this[this.mode + 'WrapBody'](body);
+};
+
+AddMatch.prototype.appendContentWrapBody = function(body) {
+  var refs = this.refs;
+  var applyCtx = refs.applyCtx;
+  var apply = refs.apply;
+
+  if (typeof body !== 'function')
+    return function() { return [ apply('content') , body ]; };
+
+  return function() {
+    return [ apply('content'), applyCtx(body.call(this, this, this.ctx)) ];
+  };
+};
+
+AddMatch.prototype.prependContentWrapBody = function(body) {
+  var refs = this.refs;
+  var applyCtx = refs.applyCtx;
+  var apply = refs.apply;
+
+  if (typeof body !== 'function')
+    return function() { return [ body, apply('content') ]; };
+
+  return function() {
+    return [ applyCtx(body.call(this, this, this.ctx)), apply('content') ];
+  };
+};
+
+function CompilerOptions(options) {
+  MatchBase.call(this);
+  this.options = options;
+}
+inherits(CompilerOptions, MatchBase);
+
+function PropertyMatch(key, value) {
+  MatchBase.call(this);
+
+  this.key = key;
+  this.value = value;
+}
+inherits(PropertyMatch, MatchBase);
+
+function CustomMatch(body) {
+  MatchBase.call(this);
+
+  this.body = body;
+}
+inherits(CustomMatch, MatchBase);
+
+function MatchTemplate(mode, template) {
+  this.mode = mode;
+  this.predicates = new Array(template.predicates.length);
+  this.body = template.body;
+
+  var postpone = [];
+
+  for (var i = 0, j = 0; i < this.predicates.length; i++, j++) {
+    var pred = template.predicates[i];
+    if (pred instanceof PropertyMatch) {
+      this.predicates[j] = new MatchNested(this, pred);
+    } else if (pred instanceof ExtendMatch) {
+      j--;
+      postpone.push(new MatchExtend(this));
+    } else if (pred instanceof AddMatch) {
+      this.predicates[i] = new AddWrap(this, pred);
+    } else if (pred instanceof CustomMatch) {
+      this.predicates[j] = new MatchCustom(this, pred);
+
+      // Push MatchWrap later, they should not be executed first.
+      // Otherwise they will set flag too early, and body might not be executed
+    } else if (pred instanceof WrapMatch) {
+      j--;
+      postpone.push(new MatchWrap(this));
+    } else {
+      // Skip
+      j--;
+    }
+  }
+
+  // Insert late predicates
+  for (var i = 0; i < postpone.length; i++, j++)
+    this.predicates[j] = postpone[i];
+
+  if (this.predicates.length !== j)
+    this.predicates.length = j;
+}
+
+function Match(entity, modeName) {
+  this.entity = entity;
+  this.modeName = modeName;
+  this.bemxjst = this.entity.bemxjst;
+  this.templates = [];
+
+  // applyNext mask
+  this.mask = [ 0 ];
+
+  // We are going to create copies of mask for nested `applyNext()`
+  this.maskSize = 0;
+  this.maskOffset = 0;
+
+  this.count = 0;
+  this.depth = -1;
+
+  this.thrownError = null;
+}
+
+Match.prototype.prepend = function(other) {
+  this.templates = other.templates.concat(this.templates);
+  this.count += other.count;
+
+  while (Math.ceil(this.count / 31) > this.mask.length)
+    this.mask.push(0);
+
+  this.maskSize = this.mask.length;
+};
+
+Match.prototype.push = function(template) {
+  this.templates.push(new MatchTemplate(this, template));
+  this.count++;
+
+  if (Math.ceil(this.count / 31) > this.mask.length)
+    this.mask.push(0);
+
+  this.maskSize = this.mask.length;
+};
+
+Match.prototype.tryCatch = function(fn, ctx) {
+  try {
+    return fn.call(ctx, ctx, ctx.ctx);
+  } catch (e) {
+    this.thrownError = e;
+  }
+};
+
+Match.prototype.exec = function(context) {
+  var save = this.checkDepth();
+
+  var template;
+  var bitIndex = this.maskOffset;
+  var mask = this.mask[bitIndex];
+  var bit = 1;
+  for (var i = 0; i < this.count; i++) {
+    if ((mask & bit) === 0) {
+      template = this.templates[i];
+      for (var j = 0; j < template.predicates.length; j++) {
+        var pred = template.predicates[j];
+
+        /* jshint maxdepth : false */
+        if (!pred.exec(context))
+          break;
+      }
+
+      // All predicates matched!
+      if (j === template.predicates.length)
+        break;
+    }
+
+    if (bit === 0x40000000) {
+      bitIndex++;
+      mask = this.mask[bitIndex];
+      bit = 1;
+    } else {
+      bit <<= 1;
+    }
+  }
+
+  if (i === this.count) {
+    this.restoreDepth(save);
+    return context.ctx[this.modeName];
+  }
+
+  var oldMask = mask;
+  var oldMatch = this.bemxjst.match;
+  this.mask[bitIndex] |= bit;
+  this.bemxjst.match = this;
+
+  this.thrownError = null;
+
+  var out = typeof template.body === 'function' ?
+    this.tryCatch(template.body, context) :
+    template.body;
+
+  this.mask[bitIndex] = oldMask;
+  this.bemxjst.match = oldMatch;
+  this.restoreDepth(save);
+
+  var e = this.thrownError;
+  if (e !== null) {
+    this.thrownError = null;
+    throw e;
+  }
+
+  return out;
+};
+
+Match.prototype.checkDepth = function() {
+  if (this.depth === -1) {
+    this.depth = this.bemxjst.depth;
+    return -1;
+  }
+
+  if (this.bemxjst.depth === this.depth)
+    return this.depth;
+
+  var depth = this.depth;
+  this.depth = this.bemxjst.depth;
+
+  this.maskOffset += this.maskSize;
+
+  while (this.mask.length < this.maskOffset + this.maskSize)
+    this.mask.push(0);
+
+  return depth;
+};
+
+Match.prototype.restoreDepth = function(depth) {
+  if (depth !== -1 && depth !== this.depth)
+    this.maskOffset -= this.maskSize;
+  this.depth = depth;
+};
+
+function Tree(options) {
+  this.options = options;
+  this.refs = this.options.refs;
+
+  this.boundBody = this.body.bind(this);
+
+  var methods = this.methods('body');
+  for (var i = 0; i < methods.length; i++) {
+    var method = methods[i];
+    // NOTE: method.name is empty because of .bind()
+    this.boundBody[Tree.methods[i]] = method;
+  }
+
+  this.queue = [];
+  this.templates = [];
+  this.initializers = [];
+}
+
+Tree.methods = [
+  'match', 'wrap', 'block', 'elem', 'mode', 'mod',
+  'elemMod', 'def', 'tag', 'attrs', 'cls', 'js',
+  'bem', 'mix', 'content', 'replace', 'extend', 'oninit',
+  'xjstOptions', 'appendContent', 'prependContent'
+];
+
+Tree.prototype.build = function(templates, apply) {
+  var methods = this.methods('global').concat(apply);
+  methods[0] = this.match.bind(this);
+
+  templates.apply({}, methods);
+
+  return {
+    templates: this.templates.slice().reverse(),
+    oninit: this.initializers
+  };
+};
+
+function methodFactory(self, kind, name) {
+  var method = self[name];
+  var boundBody = self.boundBody;
+
+  if (kind !== 'body') {
+    if (name === 'replace' || name === 'extend' || name === 'wrap')
+      return function() { return method.apply(self, arguments); };
+
+    return function() {
+      method.apply(self, arguments);
+      return boundBody;
+    };
+  }
+
+  return function() {
+    var res = method.apply(self, arguments);
+
+    // Insert body into last item
+    var child = self.queue.pop();
+    var last = self.queue[self.queue.length - 1];
+    last.conditions = last.conditions.concat(child.conditions);
+    last.children = last.children.concat(child.children);
+
+    if (name === 'replace' || name === 'extend' || name === 'wrap')
+      return res;
+    return boundBody;
+  };
+}
+
+Tree.prototype.methods = function(kind) {
+  var out = new Array(Tree.methods.length);
+
+  for (var i = 0; i < out.length; i++) {
+    var name = Tree.methods[i];
+    out[i] = methodFactory(this, kind, name);
+  }
+
+  return out;
+};
+
+// Called after all matches
+Tree.prototype.flush = function(conditions, item) {
+  var subcond = item.conditions ?
+      conditions.concat(item.conditions) :
+      item.conditions;
+
+  for (var i = 0; i < item.children.length; i++) {
+    var arg = item.children[i];
+
+    // Go deeper
+    if (arg instanceof Item) {
+      this.flush(subcond, item.children[i]);
+
+    // Body
+    } else {
+      var template = new Template(conditions, arg);
+      template.wrap();
+      this.templates.push(template);
+    }
+  }
+};
+
+Tree.prototype.body = function() {
+  var children = new Array(arguments.length);
+  for (var i = 0; i < arguments.length; i++)
+    children[i] = arguments[i];
+
+  var child = new Item(this, children);
+  this.queue[this.queue.length - 1].children.push(child);
+
+  if (this.queue.length === 1)
+    this.flush([], this.queue.shift());
+
+  return this.boundBody;
+};
+
+Tree.prototype.match = function() {
+  var children = new Array(arguments.length);
+  for (var i = 0; i < arguments.length; i++) {
+    var arg = arguments[i];
+    if (typeof arg === 'function')
+      arg = new CustomMatch(arg);
+    if (!(arg instanceof MatchBase))
+      throw new Error('Wrong .match() argument');
+    children[i] = arg;
+  }
+
+  this.queue.push(new Item(this, children));
+
+  return this.boundBody;
+};
+
+Tree.prototype.applyMode = function(args, mode) {
+  if (args.length) throw new Error('Predicate should not have arguments but ' +
+      JSON.stringify(args) + ' passed');
+
+  return this.mode(mode);
+};
+
+Tree.prototype.xjstOptions = function(options) {
+  this.queue.push(new Item(this, [
+    new CompilerOptions(options)
+  ]));
+  return this.boundBody;
+};
+
+Tree.prototype.block = function(name) {
+  return this.match(new PropertyMatch('block', name));
+};
+
+Tree.prototype.elem = function(name) {
+  return this.match(new PropertyMatch('elem', name));
+};
+
+Tree.prototype.mode = function(name) {
+  return this.match(new PropertyMatch('_mode', name));
+};
+
+Tree.prototype.mod = function(name, value) {
+  return this.match(new PropertyMatch([ 'mods', name ],
+                                  value === undefined ? true : String(value)));
+};
+
+Tree.prototype.elemMod = function(name, value) {
+  return this.match(new PropertyMatch([ 'elemMods', name ],
+                                  value === undefined ?  true : String(value)));
+};
+
+Tree.prototype.def = function() {
+  return this.applyMode(arguments, 'default');
+};
+
+[ 'tag', 'attrs', 'cls', 'js', 'bem', 'mix', 'content' ]
+  .forEach(function(method) {
+    Tree.prototype[method] = function() {
+      return this.applyMode(arguments, method);
+    };
+  });
+
+[ 'appendContent', 'prependContent' ].forEach(function(method) {
+  Tree.prototype[method] = function() {
+    return this.content.apply(this, arguments)
+      .match(new AddMatch(method, this.refs));
+  };
+});
+
+Tree.prototype.wrap = function() {
+  return this.def.apply(this, arguments).match(new WrapMatch(this.refs));
+};
+
+Tree.prototype.replace = function() {
+  return this.def.apply(this, arguments).match(new ReplaceMatch(this.refs));
+};
+
+Tree.prototype.extend = function() {
+  return this.def.apply(this, arguments).match(new ExtendMatch(this.refs));
+};
+
+Tree.prototype.oninit = function(fn) {
+  this.initializers.push(fn);
+};
+
+function BemxjstEntity(bemxjst, block, elem, templates) {
   this.bemxjst = bemxjst;
 
   this.block = null;
@@ -577,9 +982,8 @@ function Entity(bemxjst, block, elem, templates) {
   this.init(block, elem);
   this.initModes(templates);
 }
-exports.Entity = Entity;
 
-Entity.prototype.init = function(block, elem) {
+BemxjstEntity.prototype.init = function(block, elem) {
   this.block = block;
   this.elem = elem;
 };
@@ -588,7 +992,7 @@ function contentMode() {
   return this.ctx.content;
 }
 
-Entity.prototype.initModes = function(templates) {
+BemxjstEntity.prototype.initModes = function(templates) {
   /* jshint maxdepth : false */
   for (var i = 0; i < templates.length; i++) {
     var template = templates[i];
@@ -623,7 +1027,7 @@ Entity.prototype.initModes = function(templates) {
   }
 };
 
-Entity.prototype.prepend = function(other) {
+BemxjstEntity.prototype.prepend = function(other) {
   // Prepend to the slow modes, fast modes are in this hashmap too anyway
   var keys = Object.keys(this.rest);
   for (var i = 0; i < keys.length; i++) {
@@ -647,14 +1051,14 @@ Entity.prototype.prepend = function(other) {
 };
 
 // NOTE: This could be potentially compiled into inlined invokations
-Entity.prototype.run = function(context) {
+BemxjstEntity.prototype.run = function(context) {
   if (this.def.count !== 0)
     return this.def.exec(context);
 
   return this.defaultBody(context);
 };
 
-Entity.prototype.setDefaults = function() {
+BemxjstEntity.prototype.setDefaults = function() {
   // Default .content() template for applyNext()
   if (this.content.count !== 0)
     this.content.push(new Template([], contentMode));
@@ -668,8 +1072,6 @@ Entity.prototype.setDefaults = function() {
     }));
   }
 };
-
-},{"./match":8,"./tree":9,"./utils":10}],6:[function(require,module,exports){
 function BEMXJSTError(msg, func) {
   this.name = 'BEMXJSTError';
   this.message = msg;
@@ -682,18 +1084,6 @@ function BEMXJSTError(msg, func) {
 
 BEMXJSTError.prototype = Object.create(Error.prototype);
 BEMXJSTError.prototype.constructor = BEMXJSTError;
-
-exports.BEMXJSTError = BEMXJSTError;
-
-},{}],7:[function(require,module,exports){
-var inherits = require('inherits');
-
-var Tree = require('./tree').Tree;
-var PropertyMatch = require('./tree').PropertyMatch;
-var AddMatch = require('./tree').AddMatch;
-var Context = require('./context').Context;
-var ClassBuilder = require('./class-builder').ClassBuilder;
-var utils = require('./utils');
 
 function BEMXJST(options) {
   this.options = options || {};
@@ -729,7 +1119,6 @@ function BEMXJST(options) {
   this.defaultEnt = new this.Entity(this, '', '', []);
   this.defaultElemEnt = new this.Entity(this, '', '', []);
 }
-module.exports = BEMXJST;
 
 BEMXJST.prototype.locals = Tree.methods
     .concat('local', 'applyCtx', 'applyNext', 'apply');
@@ -785,12 +1174,10 @@ BEMXJST.prototype.compile = function(code) {
 
   // Concatenate templates with existing ones
   // TODO(indutny): it should be possible to incrementally add templates
-  if (this.tree) {
-    out = {
-      templates: out.templates.concat(this.tree.templates),
-      oninit: this.tree.oninit.concat(out.oninit)
-    };
-  }
+  if (this.tree) out = {
+    templates: out.templates.concat(this.tree.templates),
+    oninit: this.tree.oninit.concat(out.oninit)
+  };
   this.tree = out;
 
   // Group block+elem entities into a hashmap
@@ -876,10 +1263,6 @@ BEMXJST.prototype.groupEntities = function(tree) {
         (typeof template.body === 'function' ?
           template.body :
           JSON.stringify(template.body)) + ')';
-
-      if (typeof BEMXJSTError === 'undefined') {
-        BEMXJSTError = require('./error').BEMXJSTError;
-      }
 
       throw new BEMXJSTError(msg);
     }
@@ -997,7 +1380,6 @@ BEMXJST.prototype.run = function(json) {
 
   return res;
 };
-
 
 BEMXJST.prototype.runEmpty = function() {
   this.context._listLength--;
@@ -1210,931 +1592,413 @@ BEMXJST.prototype.exportApply = function(exports) {
     oninit(exports, { BEMContext: exports.BEMContext });
   }
 };
+/**
+ * @class Entity
+ * @param {BEMXJST} bemxjst
+ * @param {String} block
+ * @param {String} elem
+ * @param {Array} templates
+ */
+function Entity(bemxjst) {
+  this.bemxjst = bemxjst;
 
-},{"./class-builder":3,"./context":4,"./error":6,"./tree":9,"./utils":10,"inherits":11}],8:[function(require,module,exports){
-var tree = require('./tree');
-var PropertyMatch = tree.PropertyMatch;
-var AddMatch = tree.AddMatch;
-var WrapMatch = tree.WrapMatch;
-var ExtendMatch = tree.ExtendMatch;
-var CustomMatch = tree.CustomMatch;
+  this.jsClass = null;
 
-function MatchNested(template, pred) {
-  this.template = template;
-  this.keys = pred.key;
-  this.value = pred.value;
+  // "Fast modes"
+  this.tag = new Match(this, 'tag');
+  this.attrs = new Match(this, 'attrs');
+
+  BemxjstEntity.apply(this, arguments);
 }
 
-MatchNested.prototype.exec = function(context) {
-  var val = context;
+inherits(Entity, BemxjstEntity);
 
-  for (var i = 0; i < this.keys.length - 1; i++) {
-    val = val[this.keys[i]];
-    if (!val)
-      return false;
-  }
+Entity.prototype.init = function(block, elem) {
+  this.block = block;
+  this.elem = elem;
 
-  val = val[this.keys[i]];
-
-  if (this.value === true)
-    return val !== undefined && val !== '' && val !== false && val !== null;
-
-  return String(val) === this.value;
+  // Class for jsParams
+  this.jsClass = this.bemxjst.classBuilder.build(this.block, this.elem);
 };
 
-function MatchCustom(template, pred) {
-  this.template = template;
-  this.body = pred.body;
-}
-
-MatchCustom.prototype.exec = function(context) {
-  return this.body.call(context, context, context.ctx);
-};
-
-function MatchWrap(template) {
-  this.template = template;
-  this.wrap = null;
-}
-
-MatchWrap.prototype.exec = function(context) {
-  var res = this.wrap !== context.ctx;
-  this.wrap = context.ctx;
-  return res;
-};
-
-function MatchExtend(template) {
-  this.template = template;
-  this.wrap = null;
-}
-
-MatchExtend.prototype.exec = function(context) {
-  var res = this.ext !== context.ctx;
-  this.ext = context.ctx;
-  return res;
-};
-
-function AddWrap(template, pred) {
-  this.template = template;
-  this.key = pred.key;
-  this.value = pred.value;
-}
-
-AddWrap.prototype.exec = function(context) {
-  return context[this.key] === this.value;
-};
-
-function MatchTemplate(mode, template) {
-  this.mode = mode;
-  this.predicates = new Array(template.predicates.length);
-  this.body = template.body;
-
-  var postpone = [];
-
-  for (var i = 0, j = 0; i < this.predicates.length; i++, j++) {
-    var pred = template.predicates[i];
-    if (pred instanceof PropertyMatch) {
-      this.predicates[j] = new MatchNested(this, pred);
-    } else if (pred instanceof ExtendMatch) {
-      j--;
-      postpone.push(new MatchExtend(this));
-    } else if (pred instanceof AddMatch) {
-      this.predicates[i] = new AddWrap(this, pred);
-    } else if (pred instanceof CustomMatch) {
-      this.predicates[j] = new MatchCustom(this, pred);
-
-      // Push MatchWrap later, they should not be executed first.
-      // Otherwise they will set flag too early, and body might not be executed
-    } else if (pred instanceof WrapMatch) {
-      j--;
-      postpone.push(new MatchWrap(this));
-    } else {
-      // Skip
-      j--;
-    }
-  }
-
-  // Insert late predicates
-  for (var i = 0; i < postpone.length; i++, j++)
-    this.predicates[j] = postpone[i];
-
-  if (this.predicates.length !== j)
-    this.predicates.length = j;
-}
-exports.MatchTemplate = MatchTemplate;
-
-function Match(entity, modeName) {
-  this.entity = entity;
-  this.modeName = modeName;
-  this.bemxjst = this.entity.bemxjst;
-  this.templates = [];
-
-  // applyNext mask
-  this.mask = [ 0 ];
-
-  // We are going to create copies of mask for nested `applyNext()`
-  this.maskSize = 0;
-  this.maskOffset = 0;
-
-  this.count = 0;
-  this.depth = -1;
-
-  this.thrownError = null;
-}
-exports.Match = Match;
-
-Match.prototype.prepend = function(other) {
-  this.templates = other.templates.concat(this.templates);
-  this.count += other.count;
-
-  while (Math.ceil(this.count / 31) > this.mask.length)
-    this.mask.push(0);
-
-  this.maskSize = this.mask.length;
-};
-
-Match.prototype.push = function(template) {
-  this.templates.push(new MatchTemplate(this, template));
-  this.count++;
-
-  if (Math.ceil(this.count / 31) > this.mask.length)
-    this.mask.push(0);
-
-  this.maskSize = this.mask.length;
-};
-
-Match.prototype.tryCatch = function(fn, ctx) {
-  try {
-    return fn.call(ctx, ctx, ctx.ctx);
-  } catch (e) {
-    this.thrownError = e;
+Entity.prototype._initRest = function(key) {
+  if (key === 'default') {
+    this.rest[key] = this.def;
+  } else if (key === 'tag' ||
+    key === 'attrs' ||
+    key === 'content') {
+    this.rest[key] = this[key];
+  } else {
+    if (!this.rest.hasOwnProperty(key))
+      this.rest[key] = new Match(this, key);
   }
 };
 
-Match.prototype.exec = function(context) {
-  var save = this.checkDepth();
+Entity.prototype.defaultBody = function(context) {
+  return this.bemxjst.render(context,
+                             this,
+                             this.tag.exec(context),
 
-  var template;
-  var bitIndex = this.maskOffset;
-  var mask = this.mask[bitIndex];
-  var bit = 1;
-  for (var i = 0; i < this.count; i++) {
-    if ((mask & bit) === 0) {
-      template = this.templates[i];
-      for (var j = 0; j < template.predicates.length; j++) {
-        var pred = template.predicates[j];
+                             context.ctx.js !== false ?
+                               (this.rest.js ?
+                                  this.rest.js.exec(context) :
+                                  context.ctx.js) :
+                               undefined,
 
-        /* jshint maxdepth : false */
-        if (!pred.exec(context))
-          break;
-      }
+                             this.rest.bem ?
+                               this.rest.bem.exec(context) :
+                               context.ctx.bem,
 
-      // All predicates matched!
-      if (j === template.predicates.length)
-        break;
-    }
+                             this.rest.cls ?
+                               this.rest.cls.exec(context) :
+                               context.ctx.cls,
 
-    if (bit === 0x40000000) {
-      bitIndex++;
-      mask = this.mask[bitIndex];
-      bit = 1;
-    } else {
-      bit <<= 1;
-    }
+                             this.rest.mix ?
+                               this.rest.mix.exec(context) :
+                               context.ctx.mix,
+
+                             this.attrs.exec(context),
+                             this.content.exec(context));
+};
+
+function BEMHTML(options) {
+  BEMXJST.apply(this, arguments);
+
+  this._shortTagCloser = typeof options.xhtml !== 'undefined' &&
+                            options.xhtml ? '/>' : '>';
+
+  this._elemJsInstances = options.elemJsInstances;
+  this._omitOptionalEndTags = options.omitOptionalEndTags;
+  this._unquotedAttrs = typeof options.unquotedAttrs === 'undefined' ?
+    false :
+    options.unquotedAttrs;
+}
+
+inherits(BEMHTML, BEMXJST);
+module.exports = BEMHTML;
+
+BEMHTML.prototype.Entity = Entity;
+
+BEMHTML.prototype.runMany = function(arr) {
+  var out = '';
+  var context = this.context;
+  var prevPos = context.position;
+  var prevNotNewList = context._notNewList;
+
+  if (prevNotNewList) {
+    context._listLength += arr.length - 1;
+  } else {
+    context.position = 0;
+    context._listLength = arr.length;
+  }
+  context._notNewList = true;
+
+  if (this.canFlush) {
+    for (var i = 0; i < arr.length; i++)
+      out += context._flush(this._run(arr[i]));
+  } else {
+    for (var i = 0; i < arr.length; i++)
+      out += this._run(arr[i]);
   }
 
-  if (i === this.count) {
-    this.restoreDepth(save);
-
-    return context.ctx[this.modeName];
-  }
-
-  var oldMask = mask;
-  var oldMatch = this.bemxjst.match;
-  this.mask[bitIndex] |= bit;
-  this.bemxjst.match = this;
-
-  this.thrownError = null;
-
-  var out;
-  if (typeof template.body === 'function')
-    out = this.tryCatch(template.body, context);
-  else
-    out = template.body;
-
-  this.mask[bitIndex] = oldMask;
-  this.bemxjst.match = oldMatch;
-  this.restoreDepth(save);
-
-  var e = this.thrownError;
-  if (e !== null) {
-    this.thrownError = null;
-    throw e;
-  }
+  if (!prevNotNewList)
+    context.position = prevPos;
 
   return out;
 };
 
-Match.prototype.checkDepth = function() {
-  if (this.depth === -1) {
-    this.depth = this.bemxjst.depth;
-    return -1;
+BEMHTML.prototype.render = function(context,
+                                   entity,
+                                   tag,
+                                   js,
+                                   bem,
+                                   cls,
+                                   mix,
+                                   attrs,
+                                   content) {
+  var ctx = context.ctx;
+
+  if (tag === undefined)
+    tag = 'div';
+  else if (!tag)
+    return (content || content === 0) ? this._run(content) : '';
+
+  var out = '<' + tag;
+
+  var ctxJS = ctx.js;
+  if (ctxJS !== false) {
+    if (js === true)
+      js = {};
+
+    if (js && js !== ctx.js) {
+      if (ctxJS !== true)
+        js = utils.extend(ctxJS, js);
+    }  else if (ctxJS === true) {
+      js = {};
+    }
   }
 
-  if (this.bemxjst.depth === this.depth)
-    return this.depth;
-
-  var depth = this.depth;
-  this.depth = this.bemxjst.depth;
-
-  this.maskOffset += this.maskSize;
-
-  while (this.mask.length < this.maskOffset + this.maskSize)
-    this.mask.push(0);
-
-  return depth;
-};
-
-Match.prototype.restoreDepth = function(depth) {
-  if (depth !== -1 && depth !== this.depth)
-    this.maskOffset -= this.maskSize;
-  this.depth = depth;
-};
-
-},{"./tree":9}],9:[function(require,module,exports){
-var assert = require('minimalistic-assert');
-var inherits = require('inherits');
-
-function Template(predicates, body) {
-  this.predicates = predicates;
-
-  this.body = body;
-}
-exports.Template = Template;
-
-Template.prototype.wrap = function() {
-  var body = this.body;
-  for (var i = 0; i < this.predicates.length; i++) {
-    var pred = this.predicates[i];
-    body = pred.wrapBody(body);
-  }
-  this.body = body;
-};
-
-Template.prototype.clone = function() {
-  return new Template(this.predicates.slice(), this.body);
-};
-
-function MatchBase() {
-}
-exports.MatchBase = MatchBase;
-
-MatchBase.prototype.wrapBody = function(body) {
-  return body;
-};
-
-function Item(tree, children) {
-  this.conditions = [];
-  this.children = [];
-
-  for (var i = children.length - 1; i >= 0; i--) {
-    var arg = children[i];
-    if (arg instanceof MatchBase)
-      this.conditions.push(arg);
-    else if (arg === tree.boundBody)
-      this.children[i] = tree.queue.pop();
-    else
-      this.children[i] = arg;
-  }
-}
-
-function WrapMatch(refs) {
-  MatchBase.call(this);
-
-  this.refs = refs;
-}
-inherits(WrapMatch, MatchBase);
-exports.WrapMatch = WrapMatch;
-
-WrapMatch.prototype.wrapBody = function(body) {
-  var applyCtx = this.refs.applyCtx;
-
-  if (typeof body !== 'function') {
-    return function() {
-      return applyCtx(body);
-    };
+  var jsParams;
+  if (js) {
+    jsParams = {};
+    jsParams[entity.jsClass] = js;
   }
 
-  return function() {
-    return applyCtx(body.call(this, this, this.ctx));
-  };
-};
+  var isBEM = typeof bem !== 'undefined' ? bem : entity.block || entity.elem;
+  isBEM = !!isBEM;
 
-function ReplaceMatch(refs) {
-  MatchBase.call(this);
+  var addJSInitClass = jsParams && (
+    this._elemJsInstances ?
+      (entity.block || entity.elem) :
+      (entity.block && !entity.elem)
+  );
 
-  this.refs = refs;
-}
-inherits(ReplaceMatch, MatchBase);
-exports.ReplaceMatch = ReplaceMatch;
+  if (!isBEM && !cls)
+    return this.renderClose(out, context, tag, attrs, isBEM, ctx, content);
 
-ReplaceMatch.prototype.wrapBody = function(body) {
-  var applyCtx = this.refs.applyCtx;
+  out += ' class=';
+  var classValue = '';
+  if (isBEM) {
+    classValue += entity.jsClass + this.buildModsClasses(entity.block,
+                                                         entity.elem,
+                                                         entity.elem ?
+                                                           context.elemMods :
+                                                           context.mods);
 
-  if (typeof body !== 'function') {
-    return function() {
-      return applyCtx(body);
-    };
-  }
+    if (ctx.mix && mix && mix !== ctx.mix)
+      mix = [].concat(mix, ctx.mix);
 
-  return function() {
-    return applyCtx(body.call(this, this, this.ctx));
-  };
-};
-
-function ExtendMatch(refs) {
-  MatchBase.call(this);
-
-  this.refs = refs;
-}
-inherits(ExtendMatch, MatchBase);
-exports.ExtendMatch = ExtendMatch;
-
-ExtendMatch.prototype.wrapBody = function(body) {
-  var applyCtx = this.refs.applyCtx;
-  var local = this.refs.local;
-
-  if (typeof body !== 'function') {
-    return function() {
-      var changes = {};
-
-      var keys = Object.keys(body);
-      for (var i = 0; i < keys.length; i++)
-        changes[keys[i]] = body[keys[i]];
-
-      return local(changes)(function() {
-        return applyCtx(this.ctx);
-      });
-    };
-  }
-
-  return function() {
-    var changes = {};
-
-    var obj = body.call(this, this, this.ctx);
-    var keys = Object.keys(obj);
-    for (var i = 0; i < keys.length; i++)
-      changes[keys[i]] = obj[keys[i]];
-
-    return local(changes)(function() {
-      return applyCtx(this.ctx);
-    });
-  };
-};
-
-function AddMatch(mode, refs) {
-  MatchBase.call(this);
-
-  this.mode = mode;
-  this.refs = refs;
-}
-inherits(AddMatch, MatchBase);
-exports.AddMatch = AddMatch;
-
-AddMatch.prototype.wrapBody = function(body) {
-  return this[this.mode + 'WrapBody'](body);
-};
-
-AddMatch.prototype.appendContentWrapBody = function(body) {
-  var refs = this.refs;
-  var applyCtx = refs.applyCtx;
-  var apply = refs.apply;
-
-  if (typeof body !== 'function') {
-    return function() {
-      return [ apply('content') , body ];
-    };
-  }
-
-  return function() {
-    return [ apply('content'), applyCtx(body.call(this, this, this.ctx)) ];
-  };
-};
-
-AddMatch.prototype.prependContentWrapBody = function(body) {
-  var refs = this.refs;
-  var applyCtx = refs.applyCtx;
-  var apply = refs.apply;
-
-  if (typeof body !== 'function') {
-    return function() {
-      return [ body, apply('content') ];
-    };
-  }
-
-  return function() {
-    return [ applyCtx(body.call(this, this, this.ctx)), apply('content') ];
-  };
-};
-
-function CompilerOptions(options) {
-  MatchBase.call(this);
-  this.options = options;
-}
-inherits(CompilerOptions, MatchBase);
-exports.CompilerOptions = CompilerOptions;
-
-function PropertyMatch(key, value) {
-  MatchBase.call(this);
-
-  this.key = key;
-  this.value = value;
-}
-inherits(PropertyMatch, MatchBase);
-exports.PropertyMatch = PropertyMatch;
-
-function CustomMatch(body) {
-  MatchBase.call(this);
-
-  this.body = body;
-}
-inherits(CustomMatch, MatchBase);
-exports.CustomMatch = CustomMatch;
-
-function Tree(options) {
-  this.options = options;
-  this.refs = this.options.refs;
-
-  this.boundBody = this.body.bind(this);
-
-  var methods = this.methods('body');
-  for (var i = 0; i < methods.length; i++) {
-    var method = methods[i];
-    // NOTE: method.name is empty because of .bind()
-    this.boundBody[Tree.methods[i]] = method;
-  }
-
-  this.queue = [];
-  this.templates = [];
-  this.initializers = [];
-}
-exports.Tree = Tree;
-
-Tree.methods = [
-  'match', 'wrap', 'block', 'elem', 'mode', 'mod',
-  'elemMod', 'def', 'tag', 'attrs', 'cls', 'js',
-  'bem', 'mix', 'content', 'replace', 'extend', 'oninit',
-  'xjstOptions', 'appendContent', 'prependContent'
-];
-
-Tree.prototype.build = function(templates, apply) {
-  var methods = this.methods('global').concat(apply);
-  methods[0] = this.match.bind(this);
-
-  templates.apply({}, methods);
-
-  return {
-    templates: this.templates.slice().reverse(),
-    oninit: this.initializers
-  };
-};
-
-function methodFactory(self, kind, name) {
-  var method = self[name];
-  var boundBody = self.boundBody;
-
-  if (kind !== 'body') {
-    if (name === 'replace' || name === 'extend' || name === 'wrap') {
-      return function() {
-        return method.apply(self, arguments);
-      };
+    if (mix) {
+      var m = this.renderMix(entity, mix, jsParams, addJSInitClass);
+      classValue += m.out;
+      jsParams = m.jsParams;
+      addJSInitClass = m.addJSInitClass;
     }
 
-    return function() {
-      method.apply(self, arguments);
-      return boundBody;
-    };
+    if (cls)
+      classValue += ' ' + (typeof cls === 'string' ?
+                    utils.attrEscape(cls).trim() : cls);
+  } else {
+    classValue += typeof cls === 'string' ?
+      utils.attrEscape(cls).trim() :
+      cls;
   }
 
-  return function() {
-    var res = method.apply(self, arguments);
+  if (addJSInitClass)
+    classValue += ' i-bem';
 
-    // Insert body into last item
-    var child = self.queue.pop();
-    var last = self.queue[self.queue.length - 1];
-    last.conditions = last.conditions.concat(child.conditions);
-    last.children = last.children.concat(child.children);
+  out += this._unquotedAttrs && utils.isUnquotedAttr(classValue) ?
+    classValue :
+    ('"' + classValue + '"');
 
-    if (name === 'replace' || name === 'extend' || name === 'wrap')
-      return res;
-    return boundBody;
-  };
-}
+  if (isBEM && jsParams)
+    out += ' data-bem=\'' + utils.jsAttrEscape(JSON.stringify(jsParams)) + '\'';
 
-Tree.prototype.methods = function(kind) {
-  var out = new Array(Tree.methods.length);
+  return this.renderClose(out, context, tag, attrs, isBEM, ctx, content);
+};
 
-  for (var i = 0; i < out.length; i++) {
-    var name = Tree.methods[i];
-    out[i] = methodFactory(this, kind, name);
+var OPTIONAL_END_TAGS = {
+  // https://www.w3.org/TR/html4/index/elements.html
+  html: 1, head: 1, body: 1, p: 1, li: 1, dt: 1, dd: 1,
+  colgroup: 1, thead: 1, tbody: 1, tfoot: 1, tr: 1, th: 1, td: 1, option: 1,
+
+  // html5 https://www.w3.org/TR/html5/syntax.html#optional-tags
+  /* dl — Neither tag is omissible */ rb: 1, rt: 1, rtc: 1, rp: 1, optgroup: 1
+};
+
+BEMHTML.prototype.renderClose = function(prefix,
+                                         context,
+                                         tag,
+                                         attrs,
+                                         isBEM,
+                                         ctx,
+                                         content) {
+  var out = prefix;
+
+  out += this.renderAttrs(attrs, ctx);
+
+  if (utils.isShortTag(tag)) {
+    out += this._shortTagCloser;
+    if (this.canFlush)
+      out = context._flush(out);
+  } else {
+    out += '>';
+    if (this.canFlush)
+      out = context._flush(out);
+
+    // TODO(indutny): skip apply next flags
+    if (content || content === 0)
+      out += this.renderContent(content, isBEM);
+
+    if (!this._omitOptionalEndTags || !OPTIONAL_END_TAGS.hasOwnProperty(tag))
+      out += '</' + tag + '>';
   }
 
+  if (this.canFlush)
+    out = context._flush(out);
   return out;
 };
 
-// Called after all matches
-Tree.prototype.flush = function(conditions, item) {
-  var subcond;
-
-  if (item.conditions)
-    subcond = conditions.concat(item.conditions);
-  else
-    subcond = item.conditions;
-
-  for (var i = 0; i < item.children.length; i++) {
-    var arg = item.children[i];
-
-    // Go deeper
-    if (arg instanceof Item) {
-      this.flush(subcond, item.children[i]);
-
-    // Body
-    } else {
-      var template = new Template(conditions, arg);
-      template.wrap();
-      this.templates.push(template);
-    }
-  }
-};
-
-Tree.prototype.body = function() {
-  var children = new Array(arguments.length);
-  for (var i = 0; i < arguments.length; i++)
-    children[i] = arguments[i];
-
-  var child = new Item(this, children);
-  this.queue[this.queue.length - 1].children.push(child);
-
-  if (this.queue.length === 1)
-    this.flush([], this.queue.shift());
-
-  return this.boundBody;
-};
-
-Tree.prototype.match = function() {
-  var children = new Array(arguments.length);
-  for (var i = 0; i < arguments.length; i++) {
-    var arg = arguments[i];
-    if (typeof arg === 'function')
-      arg = new CustomMatch(arg);
-    assert(arg instanceof MatchBase, 'Wrong .match() argument');
-    children[i] = arg;
-  }
-
-  this.queue.push(new Item(this, children));
-
-  return this.boundBody;
-};
-
-Tree.prototype.applyMode = function(args, mode) {
-  if (args.length) {
-    throw new Error('Predicate should not have arguments but ' +
-      JSON.stringify(args) + ' passed');
-  }
-
-  return this.mode(mode);
-};
-
-Tree.prototype.xjstOptions = function(options) {
-  this.queue.push(new Item(this, [
-    new CompilerOptions(options)
-  ]));
-  return this.boundBody;
-};
-
-Tree.prototype.block = function(name) {
-  return this.match(new PropertyMatch('block', name));
-};
-
-Tree.prototype.elem = function(name) {
-  return this.match(new PropertyMatch('elem', name));
-};
-
-Tree.prototype.mode = function(name) {
-  return this.match(new PropertyMatch('_mode', name));
-};
-
-Tree.prototype.mod = function(name, value) {
-  return this.match(new PropertyMatch([ 'mods', name ],
-                                  value === undefined ? true : String(value)));
-};
-
-Tree.prototype.elemMod = function(name, value) {
-  return this.match(new PropertyMatch([ 'elemMods', name ],
-                                  value === undefined ?  true : String(value)));
-};
-
-Tree.prototype.def = function() {
-  return this.applyMode(arguments, 'default');
-};
-
-[ 'tag', 'attrs', 'cls', 'js', 'bem', 'mix', 'content' ]
-  .forEach(function(method) {
-    Tree.prototype[method] = function() {
-      return this.applyMode(arguments, method);
-    };
-  });
-
-[ 'appendContent', 'prependContent' ].forEach(function(method) {
-  Tree.prototype[method] = function() {
-    return this.content.apply(this, arguments)
-      .match(new AddMatch(method, this.refs));
-  };
-});
-
-Tree.prototype.wrap = function() {
-  return this.def.apply(this, arguments).match(new WrapMatch(this.refs));
-};
-
-Tree.prototype.replace = function() {
-  return this.def.apply(this, arguments).match(new ReplaceMatch(this.refs));
-};
-
-Tree.prototype.extend = function() {
-  return this.def.apply(this, arguments).match(new ExtendMatch(this.refs));
-};
-
-Tree.prototype.oninit = function(fn) {
-  this.initializers.push(fn);
-};
-
-},{"inherits":11,"minimalistic-assert":12}],10:[function(require,module,exports){
-var amp = '&amp;';
-var lt = '&lt;';
-var gt = '&gt;';
-var quot = '&quot;';
-var singleQuot = '&#39;';
-
-var matchXmlRegExp = /[&<>]/;
-
-exports.xmlEscape = function(string) {
-  var str = '' + string;
-  var match = matchXmlRegExp.exec(str);
-
-  if (!match)
-    return str;
-
-  var escape;
-  var html = '';
-  var index = 0;
-  var lastIndex = 0;
-
-  for (index = match.index; index < str.length; index++) {
-    switch (str.charCodeAt(index)) {
-      case 38: // &
-        escape = amp;
-        break;
-      case 60: // <
-        escape = lt;
-        break;
-      case 62: // >
-        escape = gt;
-        break;
-      default:
-        continue;
-    }
-
-    if (lastIndex !== index)
-      html += str.substring(lastIndex, index);
-
-    lastIndex = index + 1;
-    html += escape;
-  }
-
-  return lastIndex !== index ?
-    html + str.substring(lastIndex, index) :
-    html;
-};
-
-var matchAttrRegExp = /["&]/;
-
-exports.attrEscape = function(string) {
-  var str = '' + string;
-  var match = matchAttrRegExp.exec(str);
-
-  if (!match)
-    return str;
-
-  var escape;
-  var html = '';
-  var index = 0;
-  var lastIndex = 0;
-
-  for (index = match.index; index < str.length; index++) {
-    switch (str.charCodeAt(index)) {
-      case 34: // "
-        escape = quot;
-        break;
-      case 38: // &
-        escape = amp;
-        break;
-      default:
-        continue;
-    }
-
-    if (lastIndex !== index)
-      html += str.substring(lastIndex, index);
-
-    lastIndex = index + 1;
-    html += escape;
-  }
-
-  return lastIndex !== index ?
-    html + str.substring(lastIndex, index) :
-    html;
-};
-
-var matchJsAttrRegExp = /['&]/;
-
-exports.jsAttrEscape = function(string) {
-  var str = '' + string;
-  var match = matchJsAttrRegExp.exec(str);
-
-  if (!match)
-    return str;
-
-  var escape;
-  var html = '';
-  var index = 0;
-  var lastIndex = 0;
-
-  for (index = match.index; index < str.length; index++) {
-    switch (str.charCodeAt(index)) {
-      case 38: // &
-        escape = amp;
-        break;
-      case 39: // '
-        escape = singleQuot;
-        break;
-      default:
-        continue;
-    }
-
-    if (lastIndex !== index)
-      html += str.substring(lastIndex, index);
-
-    lastIndex = index + 1;
-    html += escape;
-  }
-
-  return lastIndex !== index ?
-    html + str.substring(lastIndex, index) :
-    html;
-};
-
-exports.extend = function(o1, o2) {
-  if (!o1 || !o2)
-    return o1 || o2;
-
-  var res = {};
-  var n;
-
-  for (n in o1)
-    if (o1.hasOwnProperty(n))
-      res[n] = o1[n];
-  for (n in o2)
-    if (o2.hasOwnProperty(n))
-      res[n] = o2[n];
-  return res;
-};
-
-var SHORT_TAGS = { // hash for quick check if tag short
-  area: 1, base: 1, br: 1, col: 1, command: 1, embed: 1, hr: 1, img: 1,
-  input: 1, keygen: 1, link: 1, meta: 1, param: 1, source: 1, wbr: 1
-};
-
-exports.isShortTag = function(t) {
-  return SHORT_TAGS.hasOwnProperty(t);
-};
-
-exports.isSimple = function isSimple(obj) {
-  if (!obj || obj === true) return true;
-  if (!obj.block &&
-      !obj.elem &&
-      !obj.tag &&
-      !obj.cls &&
-      !obj.attrs &&
-      obj.hasOwnProperty('html') &&
-      isSimple(obj.html))
-    return true;
-  return typeof obj === 'string' || typeof obj === 'number';
-};
-
-exports.isObj = function(val) {
+var isObj = function(val) {
   return val && typeof val === 'object' && !Array.isArray(val) &&
     val !== null;
 };
 
-var uniqCount = 0;
-var uniqId = +new Date();
-var uniqExpando = '__' + uniqId;
-var uniqPrefix = 'uniq' + uniqId;
+BEMHTML.prototype.renderAttrs = function(attrs, ctx) {
+  var out = '';
 
-function getUniq() {
-  return uniqPrefix + (++uniqCount);
-}
-exports.getUniq = getUniq;
+  // NOTE: maybe we need to make an array for quicker serialization
+  if (isObj(attrs) || isObj(ctx.attrs)) {
+    attrs = utils.extend(attrs, ctx.attrs);
 
-exports.identify = function(obj, onlyGet) {
-  if (!obj)
-    return getUniq();
-  if (onlyGet || obj[uniqExpando])
-    return obj[uniqExpando];
+    /* jshint forin : false */
+    for (var name in attrs) {
+      var attr = attrs[name];
+      if (attr === undefined || attr === false || attr === null)
+        continue;
 
-  var u = getUniq();
-  obj[uniqExpando] = u;
-  return u;
+      if (attr === true) {
+        out += ' ' + name;
+      } else {
+        var attrVal = utils.isSimple(attr) ? attr : this.context.reapply(attr);
+        out += ' ' + name + '=';
+
+        out += this._unquotedAttrs && utils.isUnquotedAttr(attrVal) ?
+          attrVal :
+          ('"' + utils.attrEscape(attrVal) + '"');
+      }
+    }
+  }
+
+  return out;
 };
 
-exports.fnToString = function(code) {
-  // It is fine to compile without templates at first
-  if (!code)
+BEMHTML.prototype.renderMix = function(entity, mix, jsParams, addJSInitClass) {
+  var visited = {};
+  var context = this.context;
+  var js = jsParams;
+  var addInit = addJSInitClass;
+
+  visited[entity.jsClass] = true;
+
+  // Transform mix to the single-item array if it's not array
+  if (!Array.isArray(mix))
+    mix = [ mix ];
+
+  var classBuilder = this.classBuilder;
+
+  var out = '';
+  for (var i = 0; i < mix.length; i++) {
+    var item = mix[i];
+    if (!item)
+      continue;
+    if (typeof item === 'string')
+      item = { block: item, elem: undefined };
+
+    var hasItem = false;
+
+    if (item.elem) {
+      hasItem = item.elem !== entity.elem && item.elem !== context.elem ||
+        item.block && item.block !== entity.block;
+    } else if (item.block) {
+      hasItem = !(item.block === entity.block && item.mods) ||
+        item.mods && entity.elem;
+    }
+
+    var block = item.block || item._block || context.block;
+    var elem = item.elem || item._elem || context.elem;
+    var key = classBuilder.build(block, elem);
+
+    var classElem = item.elem ||
+                    item._elem ||
+                    (item.block ? undefined : context.elem);
+    if (hasItem)
+      out += ' ' + classBuilder.build(block, classElem);
+
+    out += this.buildModsClasses(block, classElem,
+      (item.elem || !item.block && (item._elem || context.elem)) ?
+        item.elemMods : item.mods);
+
+    if (item.js) {
+      if (!js)
+        js = {};
+
+      js[classBuilder.build(block, item.elem)] =
+          item.js === true ? {} : item.js;
+      if (!addInit)
+        addInit = block && !item.elem;
+    }
+
+    // Process nested mixes
+    if (!hasItem || visited[key])
+      continue;
+
+    visited[key] = true;
+    var nestedEntity = this.entities[key];
+    if (!nestedEntity)
+      continue;
+
+    var oldBlock = context.block;
+    var oldElem = context.elem;
+    var nestedMix = nestedEntity.rest.mix &&
+      nestedEntity.rest.mix.exec(context);
+    context.elem = oldElem;
+    context.block = oldBlock;
+
+    if (!nestedMix)
+      continue;
+
+    for (var j = 0; j < nestedMix.length; j++) {
+      var nestedItem = nestedMix[j];
+      if (!nestedItem) continue;
+
+      if (!nestedItem.block &&
+          !nestedItem.elem ||
+          !visited[classBuilder.build(nestedItem.block, nestedItem.elem)]) {
+        if (nestedItem.block) continue;
+
+        nestedItem._block = block;
+        nestedItem._elem = elem;
+        mix = mix.slice(0, i + 1).concat(
+          nestedItem,
+          mix.slice(i + 1)
+        );
+      }
+    }
+  }
+
+  return {
+    out: out,
+    jsParams: js,
+    addJSInitClass: addInit
+  };
+};
+
+BEMHTML.prototype.buildModsClasses = function(block, elem, mods) {
+  if (!mods)
     return '';
 
-  if (typeof code === 'function') {
-    // Examples:
-    //   function () { … }
-    //   function name() { … }
-    //   function (a, b) { … }
-    //   function name(a, b) { … }
-    var regularFunction = /^function\s*[^{]+{|}$/g;
+  var res = '';
 
-    // Examples:
-    //   () => { … }
-    //   (a, b) => { … }
-    //   _ => { … }
-    var arrowFunction = /^(_|\(\w|[^=>]+\))\s=>\s{|}$/g;
+  /*jshint -W089 */
+  for (var modName in mods) {
+    if (!mods.hasOwnProperty(modName) || modName === '')
+      continue;
 
-    code = code.toString();
-    code = code.replace(
-      code.indexOf('function') === 0 ? regularFunction : arrowFunction,
-    '');
+    var modVal = mods[modName];
+    if (!modVal && modVal !== 0) continue;
+    if (typeof modVal !== 'boolean')
+      modVal += '';
+
+    var builder = this.classBuilder;
+    res += ' ' + (elem ?
+                  builder.buildElemClass(block, elem, modName, modVal) :
+                  builder.buildBlockClass(block, modName, modVal));
   }
 
-  return code;
+  return res;
 };
-
-/**
- * regexp for check may attribute be unquoted
- *
- * https://www.w3.org/TR/html4/intro/sgmltut.html#h-3.2.2
- * https://www.w3.org/TR/html5/syntax.html#attributes
- */
-var UNQUOTED_ATTR_REGEXP = /^[:\w.-]+$/;
-
-exports.isUnquotedAttr = function(str) {
-  return str && UNQUOTED_ATTR_REGEXP.exec(str);
-};
-
-},{}],11:[function(require,module,exports){
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
-
-},{}],12:[function(require,module,exports){
-module.exports = assert;
-
-function assert(val, msg) {
-  if (!val)
-    throw new Error(msg || 'Assertion failed');
-}
-
-assert.equal = function assertEqual(l, r, msg) {
-  if (l != r)
-    throw new Error(msg || ('Assertion failed: ' + l + ' != ' + r));
-};
-
-},{}]},{},[2])(2)
-});;
+;
   return module.exports ||
       exports.BEMHTML;
 }({}, {});
