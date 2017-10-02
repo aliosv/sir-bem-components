@@ -1,3 +1,11 @@
+.radio-group_theme_sir .radio {
+    display: inline-block;
+}
+
+.radio-group_theme_sir:not(.radio-group_type_button) .radio_size_l {
+    padding: 8px 0;
+}
+
 .radio-group_theme_sir.radio-group_type_button {
     white-space: nowrap;
     display: inline-block;
