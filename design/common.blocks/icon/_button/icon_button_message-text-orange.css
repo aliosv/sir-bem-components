@@ -1,0 +1,7 @@
+.icon_button_message-text-orange {
+    background-image: url(icon_button_message-text-orange.svg);
+}
+
+.button .icon_button_message-text-orange {
+    background-size: 80% auto;
+}

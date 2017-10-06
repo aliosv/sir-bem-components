@@ -1,0 +1,7 @@
+.icon_button_message-service-orange {
+    background-image: url(icon_button_message-service-orange.svg);
+}
+
+.button .icon_button_message-service-orange {
+    background-size: 80% auto;
+}
