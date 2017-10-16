@@ -1,0 +1,7 @@
+.icon_button_trash-orange {
+    background-image: url(icon_button_trash-orange.svg);
+}
+
+.button .icon_button_trash-orange {
+    background-size: 60% auto;
+}
