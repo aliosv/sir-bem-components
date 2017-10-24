@@ -3,7 +3,7 @@ block('dialog-window').match(function() { return !this.mods.pseudo; }).replace()
         block : 'modal',
         mods : { theme : 'islands' },
         mix : [
-            { block : 'dialog-window', mods : this.ctx.mods }
+            { block : 'dialog-window', mods : this.ctx.mods, js : this.ctx.js }
         ].concat(this.ctx.mix || []),
         content : apply('content', this),
         zIndexGroupLevel : 8
