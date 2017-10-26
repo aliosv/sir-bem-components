@@ -72,6 +72,7 @@
 }
 
 .form-control_theme_sir.form-control_input .form-control__error,
+.form-control_theme_sir.form-control_select .form-control__error,
 .form-control_theme_sir.form-control_textarea .form-control__error {
     margin-top: 1px;
     display: none;
