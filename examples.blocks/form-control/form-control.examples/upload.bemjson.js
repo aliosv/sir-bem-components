@@ -23,7 +23,7 @@
         { tag : 'br' },
         {
             block : 'form-control',
-            mods : { theme : 'sir', upload : 'project-cover' },
+            mods : { theme : 'sir', upload : 'cover', coverType : 'project' },
             label : 'Загрузите фото для обложки проекта',
             name : 'project-cover'
         },
@@ -31,7 +31,7 @@
         { tag : 'br' },
         {
             block : 'form-control',
-            mods : { error : true, theme : 'sir', upload : 'project-cover' },
+            mods : { error : true, theme : 'sir', upload : 'cover', coverType : 'project' },
             label : 'Загрузите фото для обложки проекта',
             error : 'Размер фото должен быть не менее 400х400 пикселей'
         }

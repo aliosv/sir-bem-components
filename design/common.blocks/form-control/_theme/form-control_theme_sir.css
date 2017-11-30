@@ -140,12 +140,12 @@
     font-size: 13px;
 }
 
-.form-control_theme_sir.form-control_upload_project-cover {
+.form-control_theme_sir.form-control_upload_cover {
     position: relative;
     display: inline-block;
     vertical-align: top;
 }
-.form-control_theme_sir.form-control_upload_project-cover .form-control__label {
+.form-control_theme_sir.form-control_upload_cover .form-control__label {
     top: 16px;
     left: 16px;
     right: 16px;
@@ -158,12 +158,18 @@
     text-shadow: 0 0 1px #000;
     z-index: 2;
 }
-.form-control_theme_sir.form-control_upload_project-cover .form-control__control-wrap {
+.form-control_theme_sir.form-control_upload_cover .form-control__control-wrap {
     width: 400px;
     height: 250px;
+}
+.form-control_theme_sir.form-control_upload_cover.form-control_coverType_project .form-control__control-wrap {
     background: #5a5a5a url(form-control_upload_project-cover.svg) 100% 100% no-repeat;
     background-size: 95% auto;
 }
-.form-control_theme_sir.form-control_upload_project-cover .form-control__delete {
+.form-control_theme_sir.form-control_upload_cover.form-control_coverType_projectsGroup .form-control__control-wrap {
+    background: #5a5a5a url(form-control_upload_projectsGroup-cover.svg) 100% 100% no-repeat;
+    background-size: 100% auto;
+}
+.form-control_theme_sir.form-control_upload_cover .form-control__delete {
     font-size: 16px;
 }

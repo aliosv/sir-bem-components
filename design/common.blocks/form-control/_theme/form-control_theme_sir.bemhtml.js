@@ -14,5 +14,5 @@ block('form-control').mod('theme', 'sir')(
     }),
 
     mod('upload', 'avatar').elem('control').attrs()({ accept : 'image/*' }),
-    mod('upload', 'project-cover').elem('control').attrs()({ accept : 'image/*' })
+    mod('upload', 'cover').elem('control').attrs()({ accept : 'image/*' })
 );
