@@ -31,7 +31,7 @@
     "bem-core": "^4.1.1"
   },
   "scripts": {
-    "postinstall": "bower install",
+    "postinstall": "bower install --allow-root",
     "build-examples": "enb make examples && node build-examples-index.js"
   }
 }
