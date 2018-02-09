@@ -27,7 +27,7 @@ block('form-control').mod('input')(
                     }),
                     ctx.hint && ctx.mods.hint === true ? {
                         block : 'icon',
-                        mods : { size : this.ctx.mods.size, type : 'hint-grey' },
+                        mods : { size : this.ctx.mods.size, theme : this.ctx.mods.theme, type : 'hint-grey' },
                         mix : { block : 'tooltip', mods : { theme : ctx.mods.theme }, js : { hint : ctx.hint } }
                     } : ''
                 ]
