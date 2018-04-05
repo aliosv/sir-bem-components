@@ -1,6 +1,8 @@
 .main-menu_theme_sir {
     width: 80px;
     background: #5a5a5a;
+    display: flex;
+    flex-direction: column;
 }
 
 .main-menu_theme_sir .main-menu__item {
@@ -57,6 +59,11 @@
     bottom: 0;
     width: 5px;
     background: #ee8035;
+}
+
+.main-menu_theme_sir .main-menu__item_bottom {
+    margin-top: auto;
+    align-self: flex-end;
 }
 
 .main-menu_theme_sir .main-menu__item .icon + .main-menu__text {

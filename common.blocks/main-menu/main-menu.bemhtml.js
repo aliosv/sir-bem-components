@@ -6,7 +6,13 @@ block('main-menu').content()(function() {
 
         return {
             block : 'link',
-            mix : { block : 'main-menu', elem : 'item', elemMods : { active : active } },
+            mix : [
+                {
+                    block : 'main-menu',
+                    elem : 'item',
+                    elemMods : { active : active, bottom : item.bottom }
+                }
+                ].concat(item.mix || []),
             url : !active || ctx.enableActiveUrl ? item.url : undefined,
             content : [
                 item.icon,
@@ -15,6 +21,6 @@ block('main-menu').content()(function() {
                     content : item.text
                 } : ''
             ]
-        }
+        };
     });
 });
